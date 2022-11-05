@@ -1,1 +1,0 @@
-# rentx-api

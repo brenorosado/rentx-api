@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String @id @default(uuid())
+  name              String
+  email             String @unique
+  password          String
+  cnh               String
+  role              String
+  createdAt         DateTime @default(now())
+  active            Boolean @default(true)
+  rents             Rent[]
+
+  @@map("accounts")
+}
+
+model Car {
+  id                  String @id @default(uuid())
+  name                String
+  manufacturer        String
+  pricePerDay         Float
+  maxSpeed            Int
+  zeroToAHundredTime  Float
+  fuelType            String
+  gear                String
+  maxPeople           Int
+  horsePower          Int
+  description         String
+  rents               Rent[]
+  createdAt           DateTime @default(now())
+  active              Boolean @default(true)
+
+  @@map("cars")
+}
+
+model Rent {
+  id              String @id @default(uuid())
+  initialDate     DateTime
+  finalDate       DateTime
+  userId          String
+  user            Account @relation(fields: [userId], references: [id])
+  carId           String
+  car             Car @relation(fields: [carId], references: [id])
+  createdAt           DateTime @default(now())
+  active              Boolean @default(true)
+
+  @@map("rents")
+}

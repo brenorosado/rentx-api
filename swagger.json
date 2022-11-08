@@ -1,0 +1,119 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "RentX API",
+        "description": "Fictitious car rent API",
+        "contact": {
+            "name": "Breno Rosado Costa Junior",
+            "email": "brenorosado.cjr@gmail.com"
+        },
+        "versio": "1.0.0"
+    },
+    "paths": {
+        "/account": {
+            "tags": ["Account"],
+            "post": {
+                "description": "accounts creation",
+                "requestBody": {
+                    "description": "Required data for account creation",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestAccountCreation"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success. Account created successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"#/components/schemas/ResponseAccountCreation" 
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. Some fields may be missing or invalid."
+                    },
+                    "409": {
+                        "description": "Conflict. The e-mail is already being used."
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "RequestAccountCreation": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "User name"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User e-mail"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User password"
+                    },
+                    "cnh": {
+                        "type": "string",
+                        "description": "User driver's license"
+                    },
+                    "role": {
+                        "description": "User role",
+                        "enum": ["USER", "ADMIN"]
+                    }
+                },
+                "required": ["name", "email", "password", "cnh", "role"]
+            },
+            "ResponseAccountCreation": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "User account identification",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "User name"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "User e-mail"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User password"
+                    },
+                    "cnh": {
+                        "type": "string",
+                        "description": "User driver's license"
+                    },
+                    "role": {
+                        "description": "User role",
+                        "enum": ["USER", "ADMIN"]
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "User account creation time stamp"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

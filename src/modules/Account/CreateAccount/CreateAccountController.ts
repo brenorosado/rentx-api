@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { CreateAccountUseCase } from "./CreateAccountUseCase";
 
 export class CreateAccountController {
-  async handle(request: Request, response: Response) {
+  async handle (request: Request, response: Response) {
     const { body } = request;
 
     const createAccount = new CreateAccountUseCase();
@@ -15,5 +15,3 @@ export class CreateAccountController {
     return response.status(201).json(createdAccount);
   }
 }
-
-

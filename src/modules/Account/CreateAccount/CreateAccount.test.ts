@@ -22,8 +22,18 @@ let createdAccount: Account;
 
 describe("POST at /account", () => {
   it.each([
-    "when missing email", { }
-  ])()
+    ["when missing email", { email: "" }],
+    ["when missing name", { name: "" }],
+    ["when missing cnh", { cnh: "" }],
+    ["when missing role", { role: "" }],
+    ["when missing password", { role: "" }]
+  ])("Must fail %s", async (key, payload) => {
+    await request(server).post("/account")
+      .set("Accept", "application/json")
+      .expect("content-type", /json/)
+      .send({ ...createAccountPayload, ...payload })
+      .expect(400);
+  });
 
   it("Must be successfull when sending correct payload", async () => {
     const res = await request(server).post("/account")
@@ -39,11 +49,28 @@ describe("POST at /account", () => {
     );
   });
 
-  it("Deleting the created account for tests", async () => {
-    await request(server).delete(`/account/${createdAccount.id}`)
+  it("Must fail when sending a registered email", async () => {
+    await request(server).post("/account")
       .set("Accept", "application/json")
       .expect("content-type", /json/)
       .send(createAccountPayload)
+      .expect(400);
+  });
+
+  it("Deleting the created account for tests", async () => {
+    const authRes = await request(server).post("/authenticate")
+      .set("Accept", "application/json")
+      .expect("content-type", /json/)
+      .send(createAccountPayload)
+      .expect(200);
+
+    const jwtToken = authRes.body;
+
+    await request(server).delete(`/account/${createdAccount.id}`)
+      .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${jwtToken}`)
+      .send(createAccountPayload)
+      .expect("content-type", /json/)
       .expect(200);
   });
 });

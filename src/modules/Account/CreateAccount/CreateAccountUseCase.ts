@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 
 export class CreateAccountUseCase {
   async handle ({ name, email, password, cnh, role }: Account) {
-    requiredFields({ name, email, password, cnh });
+    requiredFields({ name, email, password, cnh, role });
 
     const encryptedPassword = await bcrypt.hash(password, 10);
 

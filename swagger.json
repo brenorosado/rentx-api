@@ -13,7 +13,7 @@
         "/account": {
             "post": {
                 "summary": "Create account",
-                "tags": ["accounts"],
+                "tags": ["Accounts"],
                 "description": "Create account",
                 "requestBody": {
                     "description": "Required data for account creation",
@@ -48,7 +48,7 @@
         "/authenticate": {
             "post": {
                 "summary": "Authentication",
-                "tags": ["auth"],
+                "tags": ["Auth"],
                 "description": "Login",
                 "requestBody": {
                     "description": "Required data for login",
@@ -58,6 +58,24 @@
                                 "$ref": "#/components/schemas/RequestAuthentication"
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success. Authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref":"#/components/schemas/ResponseAuthentication" 
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request. Some fields may be missing or invalid."
+                    },
+                    "401": {
+                        "description": "Unauthorized. Incorrect e-mail or password."
                     }
                 }
             }

@@ -64,11 +64,11 @@ describe("POST at /account", () => {
       .send(createAccountPayload)
       .expect(200);
 
-    const jwtToken = authRes.body;
+    const { token } = authRes.body;
 
     await request(server).delete(`/account/${createdAccount.id}`)
       .set("Accept", "application/json")
-      .set("Authorization", `Bearer ${jwtToken}`)
+      .set("Authorization", `Bearer ${token}`)
       .send(createAccountPayload)
       .expect("content-type", /json/)
       .expect(200);

@@ -11,9 +11,10 @@
     },
     "paths": {
         "/account": {
-            "tags": ["Account"],
             "post": {
-                "description": "accounts creation",
+                "summary": "Create account",
+                "tags": ["accounts"],
+                "description": "Create account",
                 "requestBody": {
                     "description": "Required data for account creation",
                     "content": {
@@ -40,6 +41,23 @@
                     },
                     "409": {
                         "description": "Conflict. The e-mail is already being used."
+                    }
+                }
+            }
+        },
+        "/authenticate": {
+            "post": {
+                "summary": "Authentication",
+                "tags": ["auth"],
+                "description": "Login",
+                "requestBody": {
+                    "description": "Required data for login",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestAuthentication"
+                            }
+                        }
                     }
                 }
             }
@@ -104,6 +122,29 @@
                     "createdAt": {
                         "type": "string",
                         "description": "User account creation time stamp"
+                    }
+                }
+            },
+            "RequestAuthentication": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User password"
+                    }
+                },
+                "required": ["email", "password"]
+            },
+            "ResponseAuthentication": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "JWT Token used for authorization"
                     }
                 }
             }

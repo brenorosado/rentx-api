@@ -21,6 +21,10 @@ const createAccountResponse = {
 let createdAccount: Account;
 
 describe("POST at /account", () => {
+  it.each([
+    "when missing email", { }
+  ])()
+
   it("Must be successfull when sending correct payload", async () => {
     const res = await request(server).post("/account")
       .set("Accept", "application/json")

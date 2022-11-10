@@ -17,6 +17,8 @@ server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 server.use(errorHandler);
 
-server.listen(PORT, () => console.log(`Server running at port ${PORT}`));
+if (process.env.NODE_ENV !== "test") {
+  server.listen(PORT, () => console.log(`Server running at port ${PORT}`));
+}
 
 export default server;

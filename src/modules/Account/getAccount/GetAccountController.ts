@@ -7,7 +7,7 @@ export class GetAccountController {
 
     const getAccount = new GetAccountUseCase();
 
-    const account = await getAccount.handle(requestingUser);
+    const account = await getAccount.handle(requestingUser.account);
 
     return response.status(200).json(account);
   }

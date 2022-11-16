@@ -21,6 +21,18 @@ model Account {
   @@map("accounts")
 }
 
+model Image {
+  id                  String @id @default(uuid())
+  fileName            String
+  fileExtension       String
+  fileKey             String
+  carId               String?
+  car                 Car? @relation(fields: [carId], references: [id])
+  createdAt           DateTime @default(now())
+  active              Boolean @default(true)
+
+  @@map("images")
+}
 model Car {
   id                  String @id @default(uuid())
   name                String
@@ -34,6 +46,7 @@ model Car {
   horsePower          Int
   description         String
   rents               Rent[]
+  images              Image[]
   createdAt           DateTime @default(now())
   active              Boolean @default(true)
 
@@ -48,8 +61,8 @@ model Rent {
   user            Account @relation(fields: [userId], references: [id])
   carId           String
   car             Car @relation(fields: [carId], references: [id])
-  createdAt           DateTime @default(now())
-  active              Boolean @default(true)
+  createdAt       DateTime @default(now())
+  active          Boolean @default(true)
 
   @@map("rents")
 }

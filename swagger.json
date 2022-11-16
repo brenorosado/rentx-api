@@ -3,12 +3,19 @@
     "info": {
         "title": "RentX API",
         "description": "Fictitious car rent API",
+        "termsOfService": "https://github.com/brenorosado",
         "contact": {
-            "name": "Breno Rosado Costa Junior",
+            "name": "Breno Rosado",
             "email": "brenorosado.cjr@gmail.com"
         },
-        "versio": "1.0.0"
+        "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://localhost:8080",
+            "description": "RentX API"
+        }
+    ],
     "paths": {
         "/account": {
             "post": {

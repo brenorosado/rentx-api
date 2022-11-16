@@ -11,6 +11,7 @@ const PORT = 8080;
 const server: Application = express();
 server.use(cors());
 server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
 server.use(router);
 
 server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

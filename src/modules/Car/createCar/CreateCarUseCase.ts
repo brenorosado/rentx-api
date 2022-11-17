@@ -20,7 +20,7 @@ export class CreateCarUseCase {
     }: CreateCarDTO, requestingUser: RequestingUser) {
 
         if(requestingUser.account.role !== "ADMIN") 
-            throw new CustomError(403, "Only admins are allowed to create a car.")
+            throw new CustomError(403, "Only admins are allowed to create a car.");
 
         requiredFields({
             name,

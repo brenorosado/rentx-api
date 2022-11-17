@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CreateCarDTO } from "./CreateCarDTO";
-import { CreateCarUseCase } from "./CreateCatUseCase";
+import { CreateCarUseCase } from "./CreateCarUseCase";
 
 export class CreateCarController {
     async handle(request: Request, response: Response) {

@@ -103,6 +103,14 @@ describe("POST at /car", () => {
     createdCar = carRes.body;
   });
 
+  it("Deleting the created image for tests", async () => {
+    await request(server).delete(`/image/${createdImage.id}`)
+        .set("Accept", "application/json")
+        .set("Authorization", bearerToken)
+        .expect("content-type", /json/)
+        .expect(200);
+  });
+
   it("Deleting the created car for tests", async () => {
     await request(server).delete(`/car/${createdCar.id}`)
         .set("Accept", "application/json")

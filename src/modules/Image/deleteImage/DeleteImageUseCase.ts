@@ -13,7 +13,7 @@ export class DeleteImageUseCase {
 
         const { fileKey, fileExtension } = deletedImage;
 
-        unlink(`/tmp/uploads/${fileKey}.${fileExtension}`, (err) => {
+        unlink(`tmp/uploads/${fileKey}.${fileExtension}`, (err) => {
             console.log(err);
         });
 

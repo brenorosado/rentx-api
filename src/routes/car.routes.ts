@@ -10,6 +10,6 @@ const createCar = new CreateCarController();
 const deleteCar = new DeleteCarController();
 
 carRouter.post("/", auth, routeAdapter(createCar.handle));
-carRouter.delete("/", auth, routeAdapter(deleteCar.handle));
+carRouter.delete("/:id", auth, routeAdapter(deleteCar.handle));
 
 export { carRouter };

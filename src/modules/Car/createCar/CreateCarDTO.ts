@@ -1,5 +1,9 @@
 import { Image } from "@prisma/client";
 
+interface ImageConnect {
+    id: string;
+}
+
 export interface CreateCarDTO {
     name: string;
     manufacturer: string;
@@ -11,5 +15,5 @@ export interface CreateCarDTO {
     maxPeople: number;
     horsePower: number;
     description: string;
-    images: Image[];
+    images: ImageConnect[];
 }

@@ -23,8 +23,6 @@ export class CreateCarUseCase {
         if(requestingUser.account.role !== "ADMIN") 
             throw new CustomError(403, "Only admins are allowed to create a car.");
 
-        if(images.length === 0) throw new CustomError(400, "A car must have at least one image.");
-
         requiredFields({
             name,
             manufacturer,
@@ -35,8 +33,11 @@ export class CreateCarUseCase {
             gear,
             maxPeople,
             horsePower,
-            description
+            description,
+            images
         });
+
+        const imagesToConnect = images.map(image => { return { id: image?.id }});
 
         const createdCar: Car = await prismaClient.car.create({
             data: {
@@ -51,9 +52,7 @@ export class CreateCarUseCase {
                 horsePower,
                 description,
                 images: {
-                    connect: {
-                        ...images
-                    }
+                    connect: imagesToConnect
                 }
             }
         });

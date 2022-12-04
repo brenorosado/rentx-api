@@ -16,11 +16,14 @@ export class CreateCarUseCase {
         gear,
         maxPeople,
         horsePower,
-        description 
+        description,
+        images
     }: CreateCarDTO, requestingUser: RequestingUser) {
 
         if(requestingUser.account.role !== "ADMIN") 
             throw new CustomError(403, "Only admins are allowed to create a car.");
+
+        if(images.length === 0) throw new CustomError(400, "A car must have at least one image.");
 
         requiredFields({
             name,
@@ -46,7 +49,12 @@ export class CreateCarUseCase {
                 gear,
                 maxPeople,
                 horsePower,
-                description
+                description,
+                images: {
+                    connect: {
+                        ...images
+                    }
+                }
             }
         });
 

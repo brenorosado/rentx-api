@@ -103,6 +103,22 @@
                     }
                 }
             }
+        },
+        "/image": {
+            "post": {
+                "summary": "Create image file in the server.",
+                "tags": ["Images"],
+                "requestBody": {
+                    "description": "Required data for image file creation.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestImageCreation"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -186,7 +202,49 @@
                 "properties": {
                     "token": {
                         "type": "string",
-                        "description": "JWT Token used for authorization"
+                        "description": "JWT Token used for authorization."
+                    }
+                }
+            },
+            "RequestImageCreation": {
+                "type": "object",
+                "properties": {
+                    "fileName": {
+                        "type": "string",
+                        "description": "Name of the file that must be created."
+                    },
+                    "fileExtension": {
+                        "type": "string",
+                        "description": "Extension of the file that must be created."
+                    },
+                    "base64": {
+                        "type": "string",
+                        "description": "The file converted to a base64 string."
+                    }
+                }
+            },
+            "ResponseImageCreation": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Image identifier in database."
+                    },
+                    "fileKey": {
+                        "type": "string",
+                        "description": "Image identifier in uploads server folder."
+                    },
+                    "fileName": {
+                        "type": "string",
+                        "description": "Name of the file that must be created."
+                    },
+                    "fileExtension": {
+                        "type": "string",
+                        "description": "Extension of the file that must be created."
+                    },
+                    "base64": {
+                        "type": "string",
+                        "description": "The file converted to a base64 string."
                     }
                 }
             },
@@ -241,7 +299,12 @@
                     "images": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                }
+                            }
                         },
                         "description": "Car images"
                     }

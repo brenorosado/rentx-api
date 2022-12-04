@@ -14,7 +14,8 @@ export class CreateCarController {
             gear,
             maxPeople,
             horsePower,
-            description
+            description,
+            images
         }: CreateCarDTO = request.body;
 
         const { requestingUser } = request.body
@@ -31,7 +32,8 @@ export class CreateCarController {
             gear,
             maxPeople,
             horsePower,
-            description
+            description,
+            images
         }, requestingUser);
 
         return response.status(201).json(createdCar);

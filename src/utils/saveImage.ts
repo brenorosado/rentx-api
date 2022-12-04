@@ -1,16 +1,14 @@
 import fs from "fs";
 import crypto from "crypto";
 import { CustomError } from "../errors/CustomError";
-
 interface FileInfo {
     fileName: String;
     fileExtension: String;
-    base64: string | NodeJS.ArrayBufferView;
+    base64: string;
 }
 
-
 export const saveImage = async ({ fileName, fileExtension, base64 }: FileInfo) => {
-    let base64Image = base64.split(';base64,').pop();
+    let base64Image: string = base64.split(';base64,').pop();
 
     const buff = crypto.randomBytes(16);
     

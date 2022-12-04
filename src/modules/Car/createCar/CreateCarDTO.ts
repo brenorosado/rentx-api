@@ -9,4 +9,5 @@ export interface CreateCarDTO {
     maxPeople: number;
     horsePower: number;
     description: string;
+    
 }

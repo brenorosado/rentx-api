@@ -30,11 +30,6 @@ export class CreateImageUseCase {
                 fileExtension,
                 fileKey,
                 carId
-                // car: {
-                //     connect: {
-                //         id: carId
-                //     }
-                // }
             }
         });
 

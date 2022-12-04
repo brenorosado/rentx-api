@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { CreateImageController } from "../modules/Image/CreateImage/CreateImageController";
+import { CreateImageController } from "../modules/Image/createImage/CreateImageController";
 import { routeAdapter } from "../utils/routerAdapter";
 import { auth } from "../middlewares/auth";
 

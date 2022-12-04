@@ -86,6 +86,23 @@
                     }
                 }
             }
+        },
+        "/car": {
+            "post": {
+                "summary": "Create car",
+                "tags": ["Cars"],
+                "description": "Create car",
+                "requestBody": {
+                    "description": "Required data for car creation",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestCarCreation"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -170,6 +187,63 @@
                     "token": {
                         "type": "string",
                         "description": "JWT Token used for authorization"
+                    }
+                }
+            },
+            "RequestCarCreation": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Car name"
+                    },
+                    "manufacturer": {
+                        "type": "string",
+                        "description": "Car manufacturer"
+                    },
+                    "pricePerDay": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Cost to ren the car per a day"
+                    },
+                    "maxSpeed": {
+                        "type": "integer",
+                        "format": "integer32",
+                        "description": "Car maximun kilometers/hour speed"
+                    },
+                    "zeroToAHundredTime": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Time til the car reaches 100 kilometers/hour speed"
+                    },
+                    "fuelType": {
+                        "type": "string",
+                        "description": "Car fuel type"
+                    },
+                    "gear": {
+                        "type": "string",
+                        "description": "Car gear type"
+                    },
+                    "maxPeople": {
+                        "type": "integer",
+                        "format": "integer32",
+                        "description": "Maximun number of people in the car"
+                    },
+                    "horsePower": {
+                        "type": "integer",
+                        "format": "integer32",
+                        "description": "Car power measured by HP"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Car's description"
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Car images"
                     }
                 }
             }

@@ -4,7 +4,7 @@ import request from "supertest";
 import { Account, Car, Image } from "@prisma/client";
 
 const createAccountPayload = {
-  email: "jesttest7@jesttest7.com",
+  email: "jesttest8@jesttest8.com",
   password: "123456",
   name: "Jest Test",
   cnh: "987654321",

@@ -3,7 +3,7 @@ import { describe, it, expect } from "@jest/globals";
 import request from "supertest";
 import { Account, Car, Image } from "@prisma/client";
 
-const createAccountPayload = {
+const createAdminAccountPayload = {
   email: "jesttest8@jesttest8.com",
   password: "123456",
   name: "Jest Test",
@@ -11,7 +11,16 @@ const createAccountPayload = {
   role: "ADMIN"
 };
 
-let createdAccount: Account;
+const createUserAccountPayload = {
+  email: "jesttest8user@jesttest8user.com",
+  password: "123456",
+  name: "Jest Test",
+  cnh: "987654321",
+  role: "USER"
+};
+
+let createdAdminAccount: Account;
+let createdUserAccount: Account;
 
 const createImagePayload = {
     fileName: "ImageTest",
@@ -36,35 +45,54 @@ const createCarPayload = {
 
 let createdCar: Car;
 
-let bearerToken: string;
+let adminBearerToken: string;
+let userBearerToken: string;
 
 describe("POST at /car", () => {
   it("Creating account for tests", async () => {
-    const res = await request(server).post("/account")
+    const adminRes = await request(server).post("/account")
       .set("Accept", "application/json")
       .expect("content-type", /json/)
-      .send(createAccountPayload)
+      .send(createAdminAccountPayload)
       .expect(201);
 
-    createdAccount = res.body;
+    createdAdminAccount = adminRes.body;
+    
+    const userRes = await request(server).post("/account")
+      .set("Accept", "application/json")
+      .expect("content-type", /json/)
+      .send(createUserAccountPayload)
+      .expect(201);
+
+    createdAdminAccount = userRes.body;
   });
 
   it("Authenticating for test", async () => {
-    const tokenRes = await request(server).post("/authenticate")
+    const adminTokenRes = await request(server).post("/authenticate")
       .set("Accept", "application/json")
       .expect("content-type", /json/)
-      .send(createAccountPayload)
+      .send(createAdminAccountPayload)
       .expect(200);
 
-      const { token } = tokenRes.body;
+    const adminToken = adminTokenRes.body.token;
 
-      bearerToken = `Bearer ${token}`;
+    adminBearerToken = `Bearer ${adminToken}`;
+
+    const userTokenRes = await request(server).post("/authenticate")
+      .set("Accept", "application/json")
+      .expect("content-type", /json/)
+      .send(createUserAccountPayload)
+      .expect(200);
+
+    const userToken = userTokenRes.body.token;
+
+    userBearerToken = `Bearer ${userToken}`;
   });
 
   it("Creating image for the car", async () => {
     const imageRes = await request(server).post("/image")
         .set("Accept", "application/json")
-        .set("Authorization", bearerToken)
+        .set("Authorization", adminBearerToken)
         .expect("content-type", /json/)
         .send(createImagePayload)
         .expect(201);
@@ -75,7 +103,7 @@ describe("POST at /car", () => {
   it("Creating car for tests", async () => {
     const carRes = await request(server).post("/car")
         .set("Accept", "application/json")
-        .set("Authorization", bearerToken)
+        .set("Authorization", adminBearerToken)
         .expect("content-type", /json/)
         .send({...createCarPayload, images: [createdImage]})
         .expect(201);
@@ -86,7 +114,7 @@ describe("POST at /car", () => {
   it("Deleting the created image for tests", async () => {
     await request(server).delete(`/image/${createdImage.id}`)
         .set("Accept", "application/json")
-        .set("Authorization", bearerToken)
+        .set("Authorization", adminBearerToken)
         .expect("content-type", /json/)
         .expect(200);
   });
@@ -94,24 +122,32 @@ describe("POST at /car", () => {
   it("Must fail when sending invalid id", async () => {
     await request(server).delete("/car/invalidId")
         .set("Accept", "application/json")
-        .set("Authorization", bearerToken)
+        .set("Authorization", adminBearerToken)
         .expect("content-type", /json/)
         .expect(400);
+  });
+
+  it("Must fail when a normal user request to delete a car", async () => {
+    await request(server).delete(`/car/${createdCar.id}`)
+        .set("Accept", "application/json")
+        .set("Authorization", userBearerToken)
+        .expect("content-type", /json/)
+        .expect(403);
   });
 
   it("Deleting the created car for tests", async () => {
     await request(server).delete(`/car/${createdCar.id}`)
         .set("Accept", "application/json")
-        .set("Authorization", bearerToken)
+        .set("Authorization", adminBearerToken)
         .expect("content-type", /json/)
         .expect(200);
   });
 
   it("Deleting the created account for tests", async () => {
-    await request(server).delete(`/account/${createdAccount.id}`)
+    await request(server).delete(`/account/${createdAdminAccount.id}`)
       .set("Accept", "application/json")
-      .set("Authorization", bearerToken)
-      .send(createAccountPayload)
+      .set("Authorization", adminBearerToken)
+      .send(createAdminAccountPayload)
       .expect("content-type", /json/)
       .expect(200);
   });

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { CreateAccountController } from "../modules/Account/createAccount/CreateAccountController";
-import { DeleteAccountController } from "../modules/Account/deleteAccount.test.ts/DeleteAccountController";
+import { DeleteAccountController } from "../modules/Account/deleteAccount/DeleteAccountController";
 import { routeAdapter } from "../utils/routerAdapter";
 import { auth } from "../middlewares/auth";
 import { GetAccountController } from "../modules/Account/getAccount/getAccountController";

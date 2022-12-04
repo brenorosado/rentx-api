@@ -50,6 +50,29 @@
                         "description": "Conflict. The e-mail is already being used."
                     }
                 }
+            },
+            "get": {
+                "summary": "Get logged user account by the bearer token",
+                "description": "This route return the logged user account information",
+                "tags": ["Accounts"],
+                "responses": {
+                    "200": {
+                        "description": "Success. Account finded.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseAccountCreation"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found."
+                    },
+                    "403": {
+                        "description": "Unauthorized."
+                    }
+                }
             }
         },
         "/authenticate": {
@@ -318,5 +341,8 @@
                 "bearerFormat": "JWT"
             }
         }
-    }
+    },
+    "security": [{
+        "bearerAuth": []
+    }]
 }

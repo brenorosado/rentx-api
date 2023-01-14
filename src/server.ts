@@ -2,7 +2,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler";
 import { router } from "./routes/routes";
-import swaggerDocument from "../swagger.json";
+import swaggerDocument from "./swagger.json";
 
 import swaggerUi from "swagger-ui-express";
 

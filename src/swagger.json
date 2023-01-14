@@ -57,7 +57,7 @@
                 "tags": ["Accounts"],
                 "responses": {
                     "200": {
-                        "description": "Success. Account finded.",
+                        "description": "Success. Account found.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -135,6 +135,105 @@
                                 }
                             }
                         }
+                    },
+                    "403": {
+                        "description": "Unauthorized."
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get cars",
+                "tags": ["Cars"],
+                "description": "Get cars",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "active",
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "required": false,
+                        "description": "Car status."
+                    },
+                    {
+                        "in": "query",
+                        "name": "available",
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "required": false,
+                        "description": "Filter by availability at request time."
+                    },
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false,
+                        "description": "Car id."
+                    },
+                    {
+                        "in": "query",
+                        "name": "manufacturer",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false,
+                        "description": "Car manufacturer."
+                    },
+                    {
+                        "in": "query",
+                        "name": "maxPrixePerDay",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": false,
+                        "description": "Maximun price per day to rent the car."
+                    },
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false,
+                        "description": "Car name."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "number",
+                            "default": 1
+                        },
+                        "required": true,
+                        "description": "Page." 
+                    },
+                    {
+                        "in": "query",
+                        "name": "elementsPerPage",
+                        "schema": {
+                            "type": "number",
+                            "default": 10
+                        },
+                        "required": true,
+                        "description": "Cars per page." 
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResponseCarCreation"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Filtered cars not found."
                     },
                     "403": {
                         "description": "Unauthorized."

@@ -5,6 +5,7 @@ interface ImageConnect {
 }
 
 export interface CreateCarDTO {
+    active?: boolean;
     name: string;
     manufacturer: string;
     pricePerDay: number;

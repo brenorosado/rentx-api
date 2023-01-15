@@ -1,15 +1,5 @@
 import { prismaClient } from "../../../database/prismaClient";
-
-interface CarGetParams {
-    active?: string;
-    available?: string;
-    id?: string;
-    elementsPerPage?: string;
-    manufacturer?: string;
-    maxPricePerDay?: string;
-    name?: string;
-    page?: string;
-}
+import { CarGetParams } from "./GetCarsParamsType";
 
 export class GetCarsUseCase {
     async handle(params: CarGetParams) {

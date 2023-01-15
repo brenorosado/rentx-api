@@ -6,7 +6,8 @@ import { requiredFields } from "../../../utils/requiredFields";
 import { CreateCarDTO } from "./CreateCarDTO";
 
 export class CreateCarUseCase {
-    async handle({ 
+    async handle({
+        active,
         name,
         manufacturer,
         pricePerDay,
@@ -41,6 +42,7 @@ export class CreateCarUseCase {
 
         const createdCar: Car = await prismaClient.car.create({
             data: {
+                active,
                 name,
                 manufacturer,
                 pricePerDay,

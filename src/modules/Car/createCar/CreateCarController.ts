@@ -5,6 +5,7 @@ import { CreateCarUseCase } from "./CreateCarUseCase";
 export class CreateCarController {
     async handle(request: Request, response: Response) {
         const {
+            active,
             name,
             manufacturer,
             pricePerDay,
@@ -23,6 +24,7 @@ export class CreateCarController {
         const createCar = new CreateCarUseCase();
 
         const createdCar = await createCar.handle({
+            active,
             name,
             manufacturer,
             pricePerDay,

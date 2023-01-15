@@ -159,24 +159,34 @@ describe("GET at /car", () => {
 
   it("GET with maxPricePerDay filter", async () => {
     const cars = await request(server).get("/car")
-        .query({...defaultParams, maxPricePerDay: 100 })
+      .query({...defaultParams, maxPricePerDay: 100 })
+      .set("Accept", "application/json")
+      .set("Authorization", bearerToken)
+      .expect("content-type", /json/)
+      .expect(200);
+
+      cars.body.forEach((car: Car) => {
+        expect(car.pricePerDay <= 100)
+      })
+  })
+
+  it("Deleting the created images", async () => {
+    createdImages.forEach(async (image) => {
+      await request(server).delete(`/image/${image.id}`)
         .set("Accept", "application/json")
         .set("Authorization", bearerToken)
         .expect("content-type", /json/)
         .expect(200);
-
-        cars.body.forEach((car: Car) => {
-          expect(car.pricePerDay <= 100)
-        })
+    })
   })
 
   it("Deleting the created cars", async () => {
     createdCars.forEach(async (car) => {
-        await request(server).delete(`/car/${car.id}`)
-            .set("Accept", "application/json")
-            .set("Authorization", bearerToken)
-            .expect("content-type", /json/)
-            .expect(200);
+      await request(server).delete(`/car/${car.id}`)
+        .set("Accept", "application/json")
+        .set("Authorization", bearerToken)
+        .expect("content-type", /json/)
+        .expect(200);
     })
   });
 

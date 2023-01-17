@@ -8,13 +8,13 @@ const createAccountPayload = {
   password: "123456",
   name: "Jest Test",
   cnh: "987654321",
-  role: "USER"
+  role: "USER",
 };
 
 let createdAccount: Account;
 let bearerToken: string;
 
-describe("POST at /account", () => {
+describe("GET at /account", () => {
   it("Creating account for tests", async () => {
     const res = await request(server).post("/account")
       .set("Accept", "application/json")
@@ -51,13 +51,13 @@ describe("POST at /account", () => {
 
     const account = res.body;
 
-    expect(createdAccount).toEqual(
-      expect.objectContaining(account)
+    expect(account).toEqual(
+      expect.objectContaining(createdAccount)
     );
   });
 
   it("Deleting the created account for tests", async () => {
-    await request(server).delete(`/account/${createdAccount.id}`)
+    await request(server).delete("/account")
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${bearerToken}`)
       .send(createAccountPayload)

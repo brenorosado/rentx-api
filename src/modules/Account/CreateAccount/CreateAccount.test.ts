@@ -11,11 +11,12 @@ const createAccountPayload = {
   role: "USER"
 };
 
-const createAccountResponse = {
+const createdAccountResponse = {
   email: "jesttest1@jesttest1.com",
   name: "Jest Test",
   cnh: "987654321",
-  role: "USER"
+  role: "USER",
+  active: true
 };
 
 let createdAccount: Account;
@@ -45,7 +46,7 @@ describe("POST at /account", () => {
     createdAccount = res.body;
 
     expect(createdAccount).toEqual(
-      expect.objectContaining(createAccountResponse)
+      expect.objectContaining(createdAccountResponse)
     );
   });
 
@@ -66,7 +67,7 @@ describe("POST at /account", () => {
 
     const { token } = authRes.body;
 
-    await request(server).delete(`/account/${createdAccount.id}`)
+    await request(server).delete("/account")
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${token}`)
       .send(createAccountPayload)

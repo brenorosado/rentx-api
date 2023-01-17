@@ -40,22 +40,14 @@ describe("DELETE at /account", () => {
   });
 
   it("Delete must fail when not providing Bearer Token", async () => {
-    await request(server).delete(`/account/${createdAccount.id}`)
+    await request(server).delete("/account")
       .set("Accept", "application/json")
       .expect("content-type", /json/)
       .expect(403);
   });
 
-  it("Delete must fail when providing a unexisting id", async () => {
-    await request(server).delete("/account/anyId")
-      .set("Accept", "application/json")
-      .set("Authorization", `Bearer ${bearerToken}`)
-      .expect("content-type", /json/)
-      .expect(400);
-  });
-
-  it("Delete must be successfull when providing an existing ID", async () => {
-    await request(server).delete(`/account/${createdAccount.id}`)
+  it("Delete must be successfull when providing an valid bearer token", async () => {
+    await request(server).delete("/account")
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${bearerToken}`)
       .expect("content-type", /json/)

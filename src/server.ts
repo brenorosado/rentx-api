@@ -18,6 +18,8 @@ server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 server.use(errorHandler);
 
+// server.use(express.static(__dirname+'src/tmp/uploads'));
+
 if (process.env.NODE_ENV !== "test") {
   server.listen(PORT, () => console.log(`Server running at port ${PORT}`));
 }

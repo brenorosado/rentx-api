@@ -157,17 +157,15 @@ describe("POST at /car", () => {
   });
 
   it("Deleting the created accounts for tests", async () => {
-    await request(server).delete(`/account/${createdAdminAccount.id}`)
+    await request(server).delete("/account")
       .set("Accept", "application/json")
       .set("Authorization", adminBearerToken)
-      .send(createAdminAccountPayload)
       .expect("content-type", /json/)
       .expect(200);
     
-      await request(server).delete(`/account/${createdUserAccount.id}`)
+      await request(server).delete("/account")
       .set("Accept", "application/json")
-      .set("Authorization", adminBearerToken)
-      .send(createAdminAccountPayload)
+      .set("Authorization", userBearerToken)
       .expect("content-type", /json/)
       .expect(200);
   });

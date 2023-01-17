@@ -8,61 +8,66 @@ datasource db {
 }
 
 model Account {
-  id                String @id @default(uuid())
-  name              String
-  email             String @unique
-  password          String
-  cnh               String
-  role              String
-  createdAt         DateTime @default(now())
-  active            Boolean @default(true)
-  rents             Rent[]
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  cnh       String
+  role      String
+  createdAt DateTime @default(now())
+  active    Boolean  @default(true)
+  image     Image?
+  rents     Rent[]
 
   @@map("accounts")
 }
 
 model Image {
-  id                  String @id @default(uuid())
-  fileName            String
-  fileExtension       String
-  fileKey             String
-  carId               String?
-  car                 Car? @relation(fields: [carId], references: [id])
-  createdAt           DateTime @default(now())
-  active              Boolean @default(true)
+  id            String   @id @default(uuid())
+  fileName      String
+  fileExtension String
+  fileKey       String
+  carId         String?
+  createdAt     DateTime @default(now())
+  active        Boolean  @default(true)
+  accountId     String?  @unique
+  url           String?
+  account       Account? @relation(fields: [accountId], references: [id])
+  car           Car?     @relation(fields: [carId], references: [id])
 
   @@map("images")
 }
+
 model Car {
-  id                  String @id @default(uuid())
-  name                String
-  manufacturer        String
-  pricePerDay         Float
-  maxSpeed            Int
-  zeroToAHundredTime  Float
-  fuelType            String
-  gear                String
-  maxPeople           Int
-  horsePower          Int
-  description         String
-  rents               Rent[]
-  images              Image[]
-  createdAt           DateTime @default(now())
-  active              Boolean @default(true)
+  id                 String   @id @default(uuid())
+  name               String
+  manufacturer       String
+  pricePerDay        Float
+  maxSpeed           Int
+  zeroToAHundredTime Float
+  fuelType           String
+  gear               String
+  maxPeople          Int
+  horsePower         Int
+  description        String
+  createdAt          DateTime @default(now())
+  active             Boolean  @default(true)
+  images             Image[]
+  rents              Rent[]
 
   @@map("cars")
 }
 
 model Rent {
-  id              String @id @default(uuid())
-  initialDate     DateTime
-  finalDate       DateTime
-  userId          String
-  user            Account @relation(fields: [userId], references: [id])
-  carId           String
-  car             Car @relation(fields: [carId], references: [id])
-  createdAt       DateTime @default(now())
-  active          Boolean @default(true)
+  id          String   @id @default(uuid())
+  initialDate DateTime
+  finalDate   DateTime
+  userId      String
+  carId       String
+  createdAt   DateTime @default(now())
+  active      Boolean  @default(true)
+  car         Car      @relation(fields: [carId], references: [id])
+  user        Account  @relation(fields: [userId], references: [id])
 
   @@map("rents")
 }

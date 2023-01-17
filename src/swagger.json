@@ -52,7 +52,7 @@
                 }
             },
             "get": {
-                "summary": "Get logged user account by the bearer token",
+                "summary": "Get logged user account by bearer token",
                 "description": "This route return the logged user account information",
                 "tags": ["Accounts"],
                 "responses": {
@@ -65,6 +65,22 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "Account not found."
+                    },
+                    "403": {
+                        "description": "Unauthorized."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete user account",
+                "description": "This route return the logged user account information",
+                "tags": ["Accounts"],
+                "responses": {
+                    "200": {
+                        "description": "Account deleted successfully."
                     },
                     "404": {
                         "description": "Account not found."
@@ -241,6 +257,35 @@
                 }
             }
         },
+        "/car/{id}": {
+            "delete": {
+                "summary": "Delete car.",
+                "tags": ["Cars"],
+                "description": "This route must be used by ADMINs to delete a car.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Car id."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Car deleted."
+                    },
+                    "404": {
+                        "description": "Car not found."
+                    },
+                    "403": {
+                        "description": "Unauthorized."
+                    }
+                }
+            }
+        },
         "/image": {
             "post": {
                 "summary": "Create image file in the server.",
@@ -253,6 +298,35 @@
                                 "$ref": "#/components/schemas/RequestImageCreation"
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/image/{id}": {
+            "delete": {
+                "summary": "Delete image.",
+                "tags": ["Images"],
+                "description": "This route must be used to delete a image.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "Image id."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Car deleted."
+                    },
+                    "404": {
+                        "description": "Car not found."
+                    },
+                    "403": {
+                        "description": "Unauthorized."
                     }
                 }
             }
@@ -278,6 +352,12 @@
                     "cnh": {
                         "type": "string",
                         "description": "User driver's license"
+                    },
+                    "image": {
+                        "type": "object",
+                        "properties": {
+                            "id": "User profile image."
+                        }
                     },
                     "role": {
                         "description": "User role",

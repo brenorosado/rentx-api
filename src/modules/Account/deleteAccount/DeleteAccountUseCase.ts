@@ -1,23 +1,26 @@
 import { Account } from "@prisma/client";
 import { prismaClient } from "../../../database/prismaClient";
 import { CustomError } from "../../../errors/CustomError";
+import { RequestingUser } from "../../../middlewares/auth";
 
 export class DeleteAccountUseCase {
-  async handle(id: string) {
+  async handle(requestingUser: RequestingUser) {
+
+    const { account } = requestingUser;
+
+    if(!account) throw new CustomError(404, "Account not found.");
 
     const accountToDelete: Account = await prismaClient.account.findUnique({
       where: {
-        id
+        id: account.id
       }
     });
 
-    if(!accountToDelete) {
-      throw new CustomError(400, "There is no account with the given ID.");
-    }
-
+    if(!accountToDelete) throw new CustomError(404, "Account not found.");
+  
     const deletedAccount = await prismaClient.account.delete({
       where: {
-        id
+        id: account.id
       }
     });
 

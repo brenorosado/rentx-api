@@ -191,7 +191,7 @@ describe("GET at /car", () => {
   });
 
   it("Deleting the created account for tests", async () => {
-    await request(server).delete(`/account/${createdAccount.id}`)
+    await request(server).delete("/account")
       .set("Accept", "application/json")
       .set("Authorization", bearerToken)
       .send(createAccountPayload)

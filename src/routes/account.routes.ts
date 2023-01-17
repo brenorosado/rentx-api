@@ -15,7 +15,7 @@ const deleteAccount = new DeleteAccountController();
 const getAccount = new GetAccountController();
 
 accountRouter.post("/", routeAdapter(createAccount.handle));
-accountRouter.delete("/:id", auth, routeAdapter(deleteAccount.handle));
+accountRouter.delete("/", auth, routeAdapter(deleteAccount.handle));
 accountRouter.get("/", auth, routeAdapter(getAccount.handle));
 accountRouter.put("/", auth, routeAdapter(updateAccount.handle));
 

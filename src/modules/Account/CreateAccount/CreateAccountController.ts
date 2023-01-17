@@ -8,7 +8,7 @@ export class CreateAccountController {
 
     const createAccount = new CreateAccountUseCase();
 
-    const createdAccount: Account = await createAccount.handle(body);
+    const createdAccount: Account = await createAccount.handle({ ...body }, body?.image);
 
     delete createdAccount.password;
 

@@ -6,6 +6,9 @@ export class GetAccountUseCase {
     const account: Account = await prismaClient.account.findUnique({
       where: {
         id: requestingUserAccount.id
+      },
+      include: {
+        image: true
       }
     });
 

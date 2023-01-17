@@ -60,7 +60,7 @@ describe("POST at /authenticate", () => {
 
     const { token } = authRes.body;
 
-    await request(server).delete(`/account/${createdAccount.id}`)
+    await request(server).delete("/account")
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${token}`)
       .send(createAccountPayload)

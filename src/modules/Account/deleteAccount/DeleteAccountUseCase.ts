@@ -4,11 +4,10 @@ import { CustomError } from "../../../errors/CustomError";
 import { RequestingUser } from "../../../middlewares/auth";
 
 export class DeleteAccountUseCase {
-  async handle(requestingUser: RequestingUser) {
-
+  async handle (requestingUser: RequestingUser) {
     const { account } = requestingUser;
 
-    if(!account) throw new CustomError(404, "Account not found.");
+    if (!account) throw new CustomError(404, "Account not found.");
 
     const accountToDelete: Account = await prismaClient.account.findUnique({
       where: {
@@ -16,8 +15,8 @@ export class DeleteAccountUseCase {
       }
     });
 
-    if(!accountToDelete) throw new CustomError(404, "Account not found.");
-  
+    if (!accountToDelete) throw new CustomError(404, "Account not found.");
+
     const deletedAccount = await prismaClient.account.delete({
       where: {
         id: account.id
@@ -25,7 +24,7 @@ export class DeleteAccountUseCase {
     });
 
     delete deletedAccount.password;
-    
+
     return deletedAccount;
   }
 }

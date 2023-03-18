@@ -12,7 +12,7 @@ model Account {
   name      String
   email     String   @unique
   password  String
-  cnh       String
+  cnh       String   @unique
   role      String
   createdAt DateTime @default(now())
   active    Boolean  @default(true)

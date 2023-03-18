@@ -4,7 +4,6 @@ import { DeleteAccountController } from "../modules/Account/deleteAccount/Delete
 import { routeAdapter } from "../utils/routerAdapter";
 import { auth } from "../middlewares/auth";
 import { GetAccountController } from "../modules/Account/getAccount/getAccountController";
-import { router } from "./routes";
 import { UpdateAccountController } from "../modules/Account/updateAccount/UpdateAccountController";
 
 const accountRouter = Router();

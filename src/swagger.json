@@ -459,9 +459,9 @@
                         "type": "string",
                         "description": "Extension of the file that must be created."
                     },
-                    "base64": {
+                    "url": {
                         "type": "string",
-                        "description": "The file converted to a base64 string."
+                        "description": "Url to get the image"
                     }
                 }
             },

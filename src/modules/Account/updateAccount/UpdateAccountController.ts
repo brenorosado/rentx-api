@@ -2,14 +2,13 @@ import { Request, Response } from "express";
 import { UpdateAccountUseCase } from "./UpdateAccountUseCase";
 
 export class UpdateAccountController {
-    async handle(request: Request, response: Response) {
-        const { body } = request;
-        const { requestingUser } = body;
+  async handle (request: Request, response: Response) {
+    const { body } = request;
 
-        const updateAccount = new UpdateAccountUseCase();
+    const updateAccount = new UpdateAccountUseCase();
 
-        const updatedAccount = await updateAccount.handle(body, requestingUser);
+    const updatedAccount = await updateAccount.handle(body);
 
-        return response.status(200).json(updatedAccount);
-    }
+    return response.status(200).json(updatedAccount);
+  }
 }

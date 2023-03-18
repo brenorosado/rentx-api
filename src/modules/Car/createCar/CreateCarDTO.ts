@@ -1,5 +1,3 @@
-import { Image } from "@prisma/client";
-
 interface ImageConnect {
     id: string;
 }

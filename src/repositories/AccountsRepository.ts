@@ -30,4 +30,14 @@ export class AccountsRepository {
 
     return updatedAccount;
   };
+
+  async delete (id: string) {
+    const deletedAccount = await prismaClient.account.delete({
+      where: {
+        id
+      }
+    });
+
+    return deletedAccount;
+  }
 }

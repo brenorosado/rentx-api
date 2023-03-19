@@ -1,4 +1,4 @@
-import server from "../../../server";
+import server from "../server";
 import { describe, it, expect } from "@jest/globals";
 import request from "supertest";
 import { Account } from "@prisma/client";
@@ -8,7 +8,7 @@ const createAccountPayload = {
   password: "123456",
   name: "Jest Test",
   cnh: "987654321",
-  role: "USER",
+  role: "USER"
 };
 
 let createdAccount: Account;

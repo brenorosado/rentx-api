@@ -1,4 +1,4 @@
-import server from "../../../server";
+import server from "../server";
 import { describe, it, expect } from "@jest/globals";
 import request from "supertest";
 import { Account, Image } from "@prisma/client";

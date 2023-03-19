@@ -1,6 +1,5 @@
-import server from "../../../server";
+import server from "../server";
 import request from "supertest";
-import { Account } from "@prisma/client";
 
 import { describe, it } from "@jest/globals";
 
@@ -12,19 +11,15 @@ const createAccountPayload = {
   role: "USER"
 };
 
-let createdAccount: Account;
 let bearerToken: string;
 
 describe("DELETE at /account", () => {
   it("Creating an account for delete test", async () => {
-    const res = await request(server).post("/account")
+    await request(server).post("/account")
       .set("Accept", "application/json")
       .expect("content-type", /json/)
       .send(createAccountPayload)
       .expect(201);
-
-    const account = res.body;
-    createdAccount = account;
   });
 
   it("Authenticating to execute tests", async () => {

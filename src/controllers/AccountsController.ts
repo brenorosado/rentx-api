@@ -12,7 +12,7 @@ export class AccountsController {
     const createdAccount: Account = await accountsService.create(body, accountRepository);
 
     return response.status(201).json(createdAccount);
-  }
+  };
 
   async update (request: Request, response: Response) {
     const { body } = request;
@@ -20,7 +20,7 @@ export class AccountsController {
     const updatedAccount: Account = await accountsService.update(body, accountRepository);
 
     return response.status(200).json(updatedAccount);
-  }
+  };
 
   async find (request: Request, response: Response) {
     const { requestingUser } = request.body;
@@ -28,7 +28,7 @@ export class AccountsController {
     const account = await accountsService.find(requestingUser, accountRepository);
 
     return response.status(200).json(account);
-  }
+  };
 
   async delete (request: Request, response: Response) {
     const { requestingUser } = request.body;
@@ -38,5 +38,5 @@ export class AccountsController {
     return response.status(200).json({
       message: "Account deleted successfully."
     });
-  }
+  };
 }

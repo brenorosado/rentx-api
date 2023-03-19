@@ -1,4 +1,8 @@
 {
+    "ts-node": {
+      // Do not forget to `npm i -D tsconfig-paths`
+      "require": ["tsconfig-paths/register"]
+    },
     "compilerOptions": {
       "sourceMap": true,
       "outDir": "dist",
@@ -6,6 +10,33 @@
       "lib": ["esnext"],
       "esModuleInterop": true,
       "resolveJsonModule": true,
-      "strictNullChecks": false
+      "strictNullChecks": false,
+      "baseUrl": ".",
+      "paths": {
+        "@database/*": [
+          "src/database/*"
+        ],
+        "@repositories/*": [
+          "src/repositories/*"
+        ],
+        "@controllersTest/*": [
+          "src/controllers/*"
+        ],
+        "@services/*": [
+          "src/services/*"
+        ],
+        "@routes/*": [
+          "src/routes/*"
+        ],
+        "@errors/*": [
+          "src/errors/*"
+        ],
+        "@utils/*": [
+          "src/utils/*"
+        ],
+        "@middlewares/*": [
+          "src/middlewares/*"
+        ]
+      }
     }
   }

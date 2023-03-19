@@ -31,6 +31,19 @@ export class AccountsRepository {
     return updatedAccount;
   };
 
+  async find (id: string) {
+    const account: Account = await prismaClient.account.findUnique({
+      where: {
+        id
+      },
+      include: {
+        image: true
+      }
+    });
+
+    return account;
+  };
+
   async delete (id: string) {
     const deletedAccount = await prismaClient.account.delete({
       where: {

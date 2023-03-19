@@ -24,6 +24,9 @@
         "@routes/*": [
           "./src/routes/*"
         ],
+        "@errors/*": [
+          "./src/errors/*"
+        ],
         "@utils/*": [
           "./src/utils/*"
         ]

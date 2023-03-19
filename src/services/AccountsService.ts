@@ -20,7 +20,7 @@ export class AccountsService {
     if (!cnhRegex.test(cnh)) throw new CustomError(400, "Nº de CNH inválido.");
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    const createdAccount = await accountRepository.create({
+    const createdAccount: Account = await accountRepository.create({
       ...account,
       password: encryptedPassword
     });
@@ -38,7 +38,7 @@ export class AccountsService {
 
     if (account.id !== id) throw new CustomError(403, "You can only update your own account.");
 
-    const updatedAccount = await accountRepository.update({
+    const updatedAccount: Account = await accountRepository.update({
       id,
       ...accountData,
       ...(!!image && {
@@ -51,10 +51,22 @@ export class AccountsService {
     return updatedAccount;
   };
 
+  async find (requestingUser: RequestingUser, accountRepository: AccountsRepository) {
+    const { id } = requestingUser.account;
+
+    requiredFields({ id });
+
+    const account: Account = await accountRepository.find(id);
+
+    return account;
+  };
+
   async delete (requestingUser: RequestingUser, accountRepository: AccountsRepository) {
     const { id } = requestingUser.account;
 
-    const deletedAccount = await accountRepository.delete(id);
+    requiredFields({ id });
+
+    const deletedAccount: Account = await accountRepository.delete(id);
 
     return deletedAccount;
   };

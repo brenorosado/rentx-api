@@ -28,7 +28,7 @@ export class AccountsService {
     delete createdAccount.password;
 
     return createdAccount;
-  }
+  };
 
   async update (payload: UpdateAccount, accountRepository: AccountsRepository) {
     const { id, image, requestingUser, ...accountData } = payload;
@@ -49,5 +49,13 @@ export class AccountsService {
     });
 
     return updatedAccount;
-  }
+  };
+
+  async delete (requestingUser: RequestingUser, accountRepository: AccountsRepository) {
+    const { id } = requestingUser.account;
+
+    const deletedAccount = await accountRepository.delete(id);
+
+    return deletedAccount;
+  };
 }

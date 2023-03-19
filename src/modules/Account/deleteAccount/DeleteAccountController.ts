@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { DeleteAccountUseCase } from "./DeleteAccountUseCase";
 
 export class DeleteAccountController {
-  async handle(request: Request, response: Response) {
+  async handle (request: Request, response: Response) {
     const { requestingUser } = request.body;
 
     const deleteAccountUseCase = new DeleteAccountUseCase();
@@ -14,5 +14,3 @@ export class DeleteAccountController {
     });
   }
 }
-
-

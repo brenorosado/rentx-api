@@ -1,11 +1,12 @@
-import { Account, Image } from ".prisma/client";
+import { Account } from ".prisma/client";
 import { requiredFields } from "@utils/requiredFields";
 import bcrypt from "bcryptjs";
 import { cnhRegex } from "@utils/validations";
 import { CustomError } from "@errors/CustomError";
+import { AccountsRepository } from "@repositories/AccountsRepository";
 
 export class AccountsService {
-  async create (account: Account, image: Image, accountRepository: any) {
+  async create (account: Account, accountRepository: AccountsRepository) {
     const { name, email, password, cnh, role } = account;
 
     requiredFields({ name, email, password, cnh, role });
@@ -17,6 +18,8 @@ export class AccountsService {
       ...account,
       password: encryptedPassword
     });
+
+    delete createdAccount.password;
 
     return createdAccount;
   }

@@ -1,21 +1,15 @@
 import { Router } from "express";
-import { CreateAccountController } from "../modules/Account/createAccount/CreateAccountController";
-import { DeleteAccountController } from "../modules/Account/deleteAccount/DeleteAccountController";
 import { routeAdapter } from "../utils/routerAdapter";
+import { AccountController } from "@controllers/AccountsController";
 import { auth } from "../middlewares/auth";
-import { GetAccountController } from "../modules/Account/getAccount/getAccountController";
-import { UpdateAccountController } from "../modules/Account/updateAccount/UpdateAccountController";
 
 const accountRouter = Router();
 
-const createAccount = new CreateAccountController();
-const updateAccount = new UpdateAccountController();
-const deleteAccount = new DeleteAccountController();
-const getAccount = new GetAccountController();
+const accountController = new AccountController();
 
-accountRouter.post("/", routeAdapter(createAccount.handle));
-accountRouter.delete("/", auth, routeAdapter(deleteAccount.handle));
-accountRouter.get("/", auth, routeAdapter(getAccount.handle));
-accountRouter.put("/", auth, routeAdapter(updateAccount.handle));
+accountRouter.post("/", routeAdapter(accountController.create));
+accountRouter.put("/", auth, routeAdapter(accountController.update));
+accountRouter.get("/", auth, routeAdapter(accountController.find));
+accountRouter.delete("/", auth, routeAdapter(accountController.delete));
 
 export { accountRouter };

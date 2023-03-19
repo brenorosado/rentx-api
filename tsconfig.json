@@ -6,6 +6,27 @@
       "lib": ["esnext"],
       "esModuleInterop": true,
       "resolveJsonModule": true,
-      "strictNullChecks": false
+      "strictNullChecks": false,
+      "baseUrl": ".",
+      "paths": {
+        "@database/*": [
+          "./src/database/*"
+        ],
+        "@repositories/*": [
+          "./src/repositories/*"
+        ],
+        "@controllers/*": [
+          "./src/controllers/*"
+        ],
+        "@services/*": [
+          "./src/services/*"
+        ],
+        "@routes/*": [
+          "./src/routes/*"
+        ],
+        "@utils/*": [
+          "./src/utils/*"
+        ]
+      }
     }
   }

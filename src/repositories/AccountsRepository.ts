@@ -1,5 +1,5 @@
 import { Account, Image } from "@prisma/client";
-import { prismaClient } from "../database/prismaClient";
+import { prismaClient } from "@database/prismaClient";
 
 export class AccountsRepository {
   async create ({ name, email, password, cnh, role }: Account, image: Image) {

@@ -14,5 +14,20 @@ export class AccountsRepository {
     });
 
     return createdAccount;
-  }
+  };
+
+  async update (account: Account) {
+    const { id } = account;
+
+    const updatedAccount = await prismaClient.account.update({
+      where: {
+        id
+      },
+      data: {
+        ...account
+      }
+    });
+
+    return updatedAccount;
+  };
 }

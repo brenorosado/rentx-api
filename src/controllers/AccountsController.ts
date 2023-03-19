@@ -3,21 +3,23 @@ import { Request, Response } from "express";
 import { AccountsService } from "@services/AccountsService";
 import { AccountsRepository } from "@repositories/AccountsRepository";
 
+const accountRepository = new AccountsRepository();
+const accountsService = new AccountsService();
 export class AccountsController {
   async create (request: Request, response: Response) {
     const { body } = request;
 
-    const accountRepository = new AccountsRepository();
-
-    const createAccountService = new AccountsService();
-
-    const createdAccount: Account = await createAccountService.create(body, accountRepository);
+    const createdAccount: Account = await accountsService.create(body, accountRepository);
 
     return response.status(201).json(createdAccount);
   }
 
-  async update () {
-    console.log("update");
+  async update (request: Request, response: Response) {
+    const { body } = request;
+
+    const updatedAccount: Account = await accountsService.update(body, accountRepository);
+
+    return response.status(200).json(updatedAccount);
   }
 
   async find () {

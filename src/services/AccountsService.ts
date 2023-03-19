@@ -1,9 +1,15 @@
-import { Account } from ".prisma/client";
+import { Account, Image } from ".prisma/client";
 import { requiredFields } from "@utils/requiredFields";
 import bcrypt from "bcryptjs";
 import { cnhRegex } from "@utils/validations";
 import { CustomError } from "@errors/CustomError";
 import { AccountsRepository } from "@repositories/AccountsRepository";
+import { RequestingUser } from "@middlewares/auth";
+
+interface UpdateAccount extends Account {
+  image?: Image;
+  requestingUser?: RequestingUser;
+}
 
 export class AccountsService {
   async create (account: Account, accountRepository: AccountsRepository) {
@@ -22,5 +28,26 @@ export class AccountsService {
     delete createdAccount.password;
 
     return createdAccount;
+  }
+
+  async update (payload: UpdateAccount, accountRepository: AccountsRepository) {
+    const { id, image, requestingUser, ...accountData } = payload;
+    const { account } = requestingUser;
+
+    requiredFields({ id });
+
+    if (account.id !== id) throw new CustomError(403, "You can only update your own account.");
+
+    const updatedAccount = await accountRepository.update({
+      id,
+      ...accountData,
+      ...(!!image && {
+        image: {
+          connect: image?.id
+        }
+      })
+    });
+
+    return updatedAccount;
   }
 }

@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { routeAdapter } from "../utils/routerAdapter";
-import { AccountController } from "@controllers/AccountsController";
-import { auth } from "../middlewares/auth";
+import { auth } from "@middlewares/auth";
+import { AccountsController } from "@controllersTest/AccountsController";
 
 const accountRouter = Router();
 
-const accountController = new AccountController();
+const accountController = new AccountsController();
 
 accountRouter.post("/", routeAdapter(accountController.create));
 accountRouter.put("/", auth, routeAdapter(accountController.update));

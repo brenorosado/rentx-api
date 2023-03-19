@@ -1,4 +1,8 @@
 {
+    "ts-node": {
+      // Do not forget to `npm i -D tsconfig-paths`
+      "require": ["tsconfig-paths/register"]
+    },
     "compilerOptions": {
       "sourceMap": true,
       "outDir": "dist",
@@ -10,25 +14,28 @@
       "baseUrl": ".",
       "paths": {
         "@database/*": [
-          "./src/database/*"
+          "src/database/*"
         ],
         "@repositories/*": [
-          "./src/repositories/*"
+          "src/repositories/*"
         ],
-        "@controllers/*": [
-          "./src/controllers/*"
+        "@controllersTest/*": [
+          "src/controllers/*"
         ],
         "@services/*": [
-          "./src/services/*"
+          "src/services/*"
         ],
         "@routes/*": [
-          "./src/routes/*"
+          "src/routes/*"
         ],
         "@errors/*": [
-          "./src/errors/*"
+          "src/errors/*"
         ],
         "@utils/*": [
-          "./src/utils/*"
+          "src/utils/*"
+        ],
+        "@middlewares/*": [
+          "src/middlewares/*"
         ]
       }
     }

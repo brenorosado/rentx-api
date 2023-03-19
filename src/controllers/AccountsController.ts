@@ -1,10 +1,9 @@
 import { Account } from ".prisma/client";
 import { Request, Response } from "express";
-// import { CreateAccountUseCase } from "./CreateAccountUseCase";
 import { AccountsService } from "@services/AccountsService";
 import { AccountsRepository } from "@repositories/AccountsRepository";
 
-export class AccountController {
+export class AccountsController {
   async create (request: Request, response: Response) {
     const { body } = request;
 
@@ -18,14 +17,14 @@ export class AccountController {
   }
 
   async update () {
-
+    console.log("update");
   }
 
   async find () {
-
+    console.log("find");
   }
 
   async delete () {
-
+    console.log("delete");
   }
 }

@@ -26,7 +26,13 @@ export class AccountsController {
     console.log("find");
   }
 
-  async delete () {
-    console.log("delete");
+  async delete (request: Request, response: Response) {
+    const { requestingUser } = request.body;
+
+    await accountsService.delete(requestingUser, accountRepository);
+
+    return response.status(200).json({
+      message: "Account deleted successfully."
+    });
   }
 }

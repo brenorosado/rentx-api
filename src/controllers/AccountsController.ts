@@ -22,8 +22,12 @@ export class AccountsController {
     return response.status(200).json(updatedAccount);
   }
 
-  async find () {
-    console.log("find");
+  async find (request: Request, response: Response) {
+    const { requestingUser } = request.body;
+
+    const account = await accountsService.find(requestingUser, accountRepository);
+
+    return response.status(200).json(account);
   }
 
   async delete (request: Request, response: Response) {

@@ -6,7 +6,11 @@ export class ImagesRepository {
     fileName,
     fileExtension,
     fileKey
-  }: Image) {
+  }: {
+    fileName: string,
+    fileExtension: string;
+    fileKey: string;
+  }) {
     const createdImage: Image = await prismaClient.image.create({
       data: {
         fileName,
@@ -18,4 +22,4 @@ export class ImagesRepository {
 
     return createdImage;
   };
-}
+};

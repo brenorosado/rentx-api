@@ -3,11 +3,12 @@ import { Request, Response } from "express";
 import { AccountsService } from "@services/AccountsService";
 import { AccountsRepository } from "@repositories/AccountsRepository";
 
-const accountRepository = new AccountsRepository();
-const accountsService = new AccountsService();
 export class AccountsController {
   async create (request: Request, response: Response) {
     const { body } = request;
+
+    const accountRepository = new AccountsRepository();
+    const accountsService = new AccountsService();
 
     const createdAccount: Account = await accountsService.create(body, accountRepository);
 
@@ -17,6 +18,9 @@ export class AccountsController {
   async update (request: Request, response: Response) {
     const { body } = request;
 
+    const accountRepository = new AccountsRepository();
+    const accountsService = new AccountsService();
+
     const updatedAccount: Account = await accountsService.update(body, accountRepository);
 
     return response.status(200).json(updatedAccount);
@@ -25,6 +29,9 @@ export class AccountsController {
   async find (request: Request, response: Response) {
     const { requestingUser } = request.body;
 
+    const accountRepository = new AccountsRepository();
+    const accountsService = new AccountsService();
+
     const account = await accountsService.find(requestingUser, accountRepository);
 
     return response.status(200).json(account);
@@ -32,6 +39,9 @@ export class AccountsController {
 
   async delete (request: Request, response: Response) {
     const { requestingUser } = request.body;
+
+    const accountRepository = new AccountsRepository();
+    const accountsService = new AccountsService();
 
     await accountsService.delete(requestingUser, accountRepository);
 

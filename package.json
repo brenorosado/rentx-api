@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "nodemon",
     "start": "ts-node --transpile-only src/server.ts",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "jest --coverage ./src/controllers/CreateAccount.test.ts"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

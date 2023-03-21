@@ -4,19 +4,19 @@ import { unlink } from "fs";
 import { Image } from "@prisma/client";
 
 export class DeleteImageUseCase {
-    async handle(id: string, requestingUser: RequestingUser) {
-        const deletedImage: Image = await prismaClient.image.delete({
-            where: {
-                id
-            }
-        });
+  async handle (id: string, requestingUser: RequestingUser) {
+    const deletedImage: Image = await prismaClient.image.delete({
+      where: {
+        id
+      }
+    });
 
-        const { fileKey, fileExtension } = deletedImage;
+    const { fileKey, fileExtension } = deletedImage;
 
-        unlink(`tmp/uploads/${fileKey}.${fileExtension}`, (err) => {
-            console.log(err);
-        });
+    unlink(`tmp/uploads/${fileKey}.${fileExtension}`, (err) => {
+      console.log(err);
+    });
 
-        return deletedImage;
-    }
+    return deletedImage;
+  }
 }

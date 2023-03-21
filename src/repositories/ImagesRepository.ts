@@ -22,4 +22,14 @@ export class ImagesRepository {
 
     return createdImage;
   };
+
+  async delete (id: string) {
+    const deletedImage: Image = await prismaClient.image.delete({
+      where: {
+        id
+      }
+    });
+
+    return deletedImage;
+  };
 };

@@ -1,14 +1,18 @@
 import { CustomError } from "@errors/CustomError";
+import { RequestingUser } from "@middlewares/auth";
 import { Car, Image } from "@prisma/client";
 import { CarsRepository } from "@repositories/CarsRepository";
 import { requiredFields } from "@utils/requiredFields";
 
 export class CarsService {
   async create (
+    requestingUser: RequestingUser,
     car: Car,
     images: Image[],
     carRepository: CarsRepository
   ) {
+    if (requestingUser.account.role !== "ADMIN") { throw new CustomError(401, "Apenas administradores podem criar carros."); };
+
     const {
       active,
       name,

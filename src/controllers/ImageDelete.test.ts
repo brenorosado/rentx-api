@@ -1,17 +1,15 @@
-import server from "../../../server";
-import { describe, it, expect } from "@jest/globals";
+import server from "../server";
+import { describe, it } from "@jest/globals";
 import request from "supertest";
-import { Account, Car, Image } from "@prisma/client";
+import { Image } from "@prisma/client";
 
 const createAccountPayload = {
-  email: "jesttest6@jesttest6.com",
+  email: "jesttest7@jesttest7.com",
   password: "123456",
   name: "Jest Test",
   cnh: "987654321",
   role: "ADMIN"
 };
-
-let createdAccount: Account;
 
 const createImagePayload = {
   fileName: "ImageTest",
@@ -40,13 +38,11 @@ let bearerToken: string;
 
 describe("POST at /image", () => {
   it("Creating account for tests", async () => {
-    const res = await request(server).post("/account")
+    await request(server).post("/account")
       .set("Accept", "application/json")
       .expect("content-type", /json/)
       .send(createAccountPayload)
       .expect(201);
-
-    createdAccount = res.body;
   });
 
   it("Authenticating for test", async () => {
@@ -61,20 +57,7 @@ describe("POST at /image", () => {
     bearerToken = `Bearer ${token}`;
   });
 
-  it.each([
-    ["missing fileName", { fileName: "" }],
-    ["missing fileExtension", { fileExtension: "" }],
-    ["missing base64", { base64: "" }]
-  ])("Must fail when %s", async (key, payload) => {
-    await request(server).post("/image")
-      .set("Accept", "application/json")
-      .set("Authorization", bearerToken)
-      .expect("content-type", /json/)
-      .send({ ...createImagePayload, ...payload })
-      .expect(400);
-  });
-
-  it("Must be successfull when sending correct payload", async () => {
+  it("Creating image for tests", async () => {
     const imageRes = await request(server).post("/image")
       .set("Accept", "application/json")
       .set("Authorization", bearerToken)
@@ -83,6 +66,14 @@ describe("POST at /image", () => {
       .expect(201);
 
     createdImage = imageRes.body;
+  });
+
+  it("Must fail when sending invalid id", async () => {
+    await request(server).delete("/image/invalidId")
+      .set("Accept", "application/json")
+      .set("Authorization", bearerToken)
+      .expect("content-type", /json/)
+      .expect(400);
   });
 
   it("Deleting the created image for tests", async () => {

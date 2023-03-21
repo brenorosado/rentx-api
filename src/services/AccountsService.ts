@@ -5,6 +5,7 @@ import { cnhRegex } from "@utils/validations";
 import { CustomError } from "@errors/CustomError";
 import { AccountsRepository } from "@repositories/AccountsRepository";
 import { RequestingUser } from "@middlewares/auth";
+import { generateToken } from "@utils/generateToken";
 
 interface UpdateAccount extends Account {
   image?: Image;
@@ -36,7 +37,12 @@ export class AccountsService {
 
     requiredFields({ id });
 
-    if (account.id !== id) throw new CustomError(403, "You can only update your own account.");
+    if (account.id !== id) throw new CustomError(403, "Você só pode alterar sua própria conta.");
+
+    if (
+      !!accountData?.cnh &&
+      !cnhRegex.test(accountData?.cnh)
+    ) throw new CustomError(400, "Nº de CNH inválido.");
 
     const updatedAccount: Account = await accountRepository.update({
       id,
@@ -70,4 +76,29 @@ export class AccountsService {
 
     return deletedAccount;
   };
-}
+
+  async authenticate (
+    { email, password }: { email: string, password: string },
+    accountRepository: AccountsRepository
+  ) {
+    requiredFields({ email, password });
+
+    const account: Account = await accountRepository.authenticate(email);
+
+    if (!account) throw new CustomError(401, "E-mail incorreto.");
+
+    let validatePassword = false;
+
+    validatePassword = await bcrypt.compare(password, account.password);
+
+    if (!validatePassword) throw new CustomError(401, "Senha incorreta.");
+
+    const token = generateToken(account);
+    delete account.password;
+
+    return {
+      token,
+      account
+    };
+  };
+};

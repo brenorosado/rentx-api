@@ -52,5 +52,15 @@ export class AccountsRepository {
     });
 
     return deletedAccount;
+  };
+
+  async authenticate (email: string) {
+    const account: Account = await prismaClient.account.findUnique({
+      where: {
+        email
+      }
+    });
+
+    return account;
   }
-}
+};

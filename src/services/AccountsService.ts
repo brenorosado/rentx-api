@@ -5,6 +5,7 @@ import { cnhRegex } from "@utils/validations";
 import { CustomError } from "@errors/CustomError";
 import { AccountsRepository } from "@repositories/AccountsRepository";
 import { RequestingUser } from "@middlewares/auth";
+import { generateToken } from "@utils/generateToken";
 
 interface UpdateAccount extends Account {
   image?: Image;
@@ -92,6 +93,12 @@ export class AccountsService {
 
     if (!validatePassword) throw new CustomError(401, "Senha incorreta.");
 
-    return account;
+    const token = generateToken(account);
+    delete account.password;
+
+    return {
+      token,
+      account
+    };
   };
 };

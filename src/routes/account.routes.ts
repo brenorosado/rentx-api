@@ -11,5 +11,6 @@ accountRouter.post("/", routeAdapter(accountController.create));
 accountRouter.put("/", auth, routeAdapter(accountController.update));
 accountRouter.get("/", auth, routeAdapter(accountController.find));
 accountRouter.delete("/", auth, routeAdapter(accountController.delete));
+accountRouter.post("/authenticate", routeAdapter(accountController.authenticate));
 
 export { accountRouter };

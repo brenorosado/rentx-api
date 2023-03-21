@@ -46,7 +46,18 @@ export class AccountsController {
     await accountsService.delete(requestingUser, accountRepository);
 
     return response.status(200).json({
-      message: "Account deleted successfully."
+      message: "Conta deletada com sucesso."
     });
   };
-}
+
+  async authenticate (request: Request, response: Response) {
+    const { body } = request;
+
+    const accountRepository = new AccountsRepository();
+    const accountsService = new AccountsService();
+
+    const authentication = await accountsService.authenticate(body, accountRepository);
+
+    return response.status(200).json(authentication);
+  };
+};

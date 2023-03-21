@@ -14,4 +14,14 @@ export class CarsRepository {
 
     return createdCar;
   };
+
+  async delete (id: string) {
+    const deletedCar: Car = await prismaClient.car.delete({
+      where: {
+        id
+      }
+    });
+
+    return deletedCar;
+  }
 };

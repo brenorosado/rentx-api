@@ -1,7 +1,6 @@
-import server from "../../../server";
-import { describe, it, expect } from "@jest/globals";
+import server from "../server";
+import { describe, it } from "@jest/globals";
 import request from "supertest";
-import { Account } from "@prisma/client";
 
 const createAccountPayload = {
   email: "jesttest4@jesttest4.com",
@@ -11,17 +10,13 @@ const createAccountPayload = {
   role: "USER"
 };
 
-let createdAccount: Account;
-
 describe("POST at /authenticate", () => {
   it("Creating account for tests", async () => {
-    const res = await request(server).post("/account")
+    await request(server).post("/account")
       .set("Accept", "application/json")
       .expect("content-type", /json/)
       .send(createAccountPayload)
       .expect(201);
-
-    createdAccount = res.body;
   });
 
   it.each([

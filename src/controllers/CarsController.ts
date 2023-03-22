@@ -31,4 +31,8 @@ export class CarsController {
 
     return response.status(200).json("Carro deletado com sucesso.");
   };
+
+  async find () {
+
+  };
 };

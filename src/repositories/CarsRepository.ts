@@ -23,5 +23,32 @@ export class CarsRepository {
     });
 
     return deletedCar;
-  }
+  };
+
+  async find (
+    filters: {
+      active?: boolean;
+      name?: Object;
+      id?: string;
+      manufacturer?: string;
+      pricePerDay?: Object;
+    },
+    pagination: { skip: number, take: number }
+  ) {
+    const cars = await prismaClient.car.findMany({
+      ...pagination,
+      where: {
+        ...filters
+      },
+      include: {
+        images: {
+          where: {
+            active: true
+          }
+        }
+      }
+    });
+
+    return cars;
+  };
 };

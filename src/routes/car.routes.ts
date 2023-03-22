@@ -1,18 +1,14 @@
 import { Router } from "express";
 import { routeAdapter } from "../utils/routerAdapter";
 import { auth } from "../middlewares/auth";
-import { CreateCarController } from "../modules/Car/createCar/CreateCarController";
-import { DeleteCarController } from "../modules/Car/deleteCar/DeleteCarController";
-import { GetCarsController } from "../modules/Car/getCars/GetCarsController";
+import { CarsController } from "@controllersTest/CarsController";
 
 const carRouter = Router();
 
-const createCar = new CreateCarController();
-const deleteCar = new DeleteCarController();
-const getCars = new GetCarsController();
+const carsController = new CarsController();
 
-carRouter.post("/", auth, routeAdapter(createCar.handle));
-carRouter.delete("/:id", auth, routeAdapter(deleteCar.handle));
-carRouter.get("/", auth, routeAdapter(getCars.handle));
+carRouter.post("/", auth, routeAdapter(carsController.create));
+carRouter.delete("/:id", auth, routeAdapter(carsController.delete));
+carRouter.get("/", auth, routeAdapter(carsController.find));
 
 export { carRouter };

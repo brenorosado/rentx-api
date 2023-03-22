@@ -35,7 +35,7 @@ export class CarsRepository {
     },
     pagination: { skip: number, take: number }
   ) {
-    const cars = await prismaClient.car.findMany({
+    const cars: Car[] = await prismaClient.car.findMany({
       ...pagination,
       where: {
         ...filters

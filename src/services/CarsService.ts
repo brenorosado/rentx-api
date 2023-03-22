@@ -51,6 +51,52 @@ export class CarsService {
     return createdCar;
   };
 
+  async find ({
+    page = "0",
+    elementsPerPage = "50",
+    active,
+    name,
+    manufacturer,
+    maxPricePerDay,
+    id
+  }: {
+    active?: string;
+    available?: string;
+    id?: string;
+    elementsPerPage?: string;
+    manufacturer?: string;
+    maxPricePerDay?: string;
+    name?: string;
+    page?: string;
+  },
+  carRepository: CarsRepository
+  ) {
+    const pagination = {
+      skip: (Number(page)) * Number(elementsPerPage),
+      take: Number(elementsPerPage)
+    };
+
+    const filters = {
+      ...(active && { active: active === "true" }),
+      ...(name && {
+        name: {
+          contains: name
+        }
+      }),
+      ...(id && { id }),
+      ...(manufacturer && { manufacturer }),
+      ...(maxPricePerDay && {
+        pricePerDay: {
+          lte: Number(maxPricePerDay)
+        }
+      })
+    };
+
+    const cars: Car[] = await carRepository.find(filters, pagination);
+
+    return cars;
+  };
+
   async delete (
     requestingUser: RequestingUser,
     id: string,

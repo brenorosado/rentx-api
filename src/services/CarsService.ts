@@ -49,5 +49,19 @@ export class CarsService {
     const createdCar = await carRepository.create(car, imagesToConnect);
 
     return createdCar;
+  };
+
+  async delete (
+    requestingUser: RequestingUser,
+    id: string,
+    carsRepository: CarsRepository
+  ) {
+    if (requestingUser.account.role !== "ADMIN") { throw new CustomError(401, "Apenas administradores podem deletar carros."); };
+
+    requiredFields({ id });
+
+    const deletedCar: Car = await carsRepository.delete(id);
+
+    return deletedCar;
   }
-}
+};

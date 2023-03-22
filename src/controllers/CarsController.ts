@@ -32,7 +32,12 @@ export class CarsController {
     return response.status(200).json("Carro deletado com sucesso.");
   };
 
-  async find () {
+  async find (request: Request, response: Response) {
+    const carsServices = new CarsService();
+    const carsRepository = new CarsRepository();
 
+    const cars = await carsServices.find(request.query, carsRepository);
+
+    return response.status(200).json(cars);
   };
 };

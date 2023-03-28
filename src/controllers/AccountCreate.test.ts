@@ -2,7 +2,6 @@ import server from "../server";
 import { describe, it, expect } from "@jest/globals";
 import request from "supertest";
 import { Account } from "@prisma/client";
-import bcryptjs from "bcryptjs";
 
 const createAccountPayload = {
   email: "jesttest1@jesttest1.com",
@@ -30,11 +29,6 @@ describe("POST at /account", () => {
     ["when missing role", { role: "" }],
     ["when missing password", { password: "" }]
   ])("Must fail %s", async (key, payload) => {
-    const randomCnh = await bcryptjs.genSalt(11);
-
-    console.log("RANDOM CNH", randomCnh);
-    console.log("RANDOMCNH");
-
     await request(server).post("/account")
       .set("Accept", "application/json")
       .expect("content-type", /json/)

@@ -58,6 +58,9 @@ export class AccountsRepository {
     const account: Account = await prismaClient.account.findUnique({
       where: {
         email
+      },
+      include: {
+        image: true
       }
     });
 

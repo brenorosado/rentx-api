@@ -1,4 +1,4 @@
-import { Account, Image } from ".prisma/client";
+import { Account } from ".prisma/client";
 import { requiredFields } from "@utils/requiredFields";
 import bcrypt from "bcryptjs";
 import { cnhRegex } from "@utils/validations";
@@ -8,7 +8,7 @@ import { RequestingUser } from "@middlewares/auth";
 import { generateToken } from "@utils/generateToken";
 
 interface UpdateAccount extends Account {
-  image?: Image;
+  image?: { id: string };
   requestingUser?: RequestingUser;
 }
 
@@ -33,16 +33,14 @@ export class AccountsService {
 
   async update (payload: UpdateAccount, accountRepository: AccountsRepository) {
     const { id, image, requestingUser, ...accountData } = payload;
+    const { name, email, cnh, role } = accountData;
     const { account } = requestingUser;
 
-    requiredFields({ id });
+    requiredFields({ id, name, email, cnh, role });
 
     if (account.id !== id) throw new CustomError(403, "Você só pode alterar sua própria conta.");
 
-    if (
-      !!accountData?.cnh &&
-      !cnhRegex.test(accountData?.cnh)
-    ) throw new CustomError(400, "Nº de CNH inválido.");
+    if (!cnhRegex.test(cnh)) throw new CustomError(400, "Nº de CNH inválido.");
 
     const updatedAccount: Account = await accountRepository.update({
       id,
@@ -90,7 +88,6 @@ export class AccountsService {
     let validatePassword = false;
 
     validatePassword = await bcrypt.compare(password, account.password);
-
     if (!validatePassword) throw new CustomError(401, "Senha incorreta.");
 
     const token = generateToken(account);

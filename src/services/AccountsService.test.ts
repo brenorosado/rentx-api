@@ -31,12 +31,14 @@ const mockedAccountsRepository = {
     });
   },
 
-  async delete (id: string) {
-    return new Promise<Account>(() => accountPayload);
+  async find (id: string) {
+    return new Promise<Account>((resolve, reject) => {
+      resolve(accountPayload);
+    });
   },
 
-  async find (id: string) {
-    return new Promise<Account>(() => [accountPayload]);
+  async delete (id: string) {
+    return new Promise<Account>(() => accountPayload);
   },
 
   async authenticate (id: string) {
@@ -140,6 +142,46 @@ describe("Update accounts service tests", () => {
 
     expect(createdAccount).toEqual(
       expect.objectContaining(updateAccountPayload)
+    );
+  });
+});
+
+describe("Find accounts service test", () => {
+  it("Should faild when sending incorrect requestingUser (unauthenticated)", async () => {
+    expect(async () => {
+      const findAccountPayload = accountPayload;
+      delete findAccountPayload.password;
+
+      await accountsService.update({
+        requestingUser: {
+          account: {
+            ...findAccountPayload,
+            id: ""
+          },
+          iat: 123
+        },
+        ...findAccountPayload
+      }, mockedAccountsRepository);
+    }).rejects.toThrow(new CustomError(400, "Você só pode alterar sua própria conta."));
+  });
+
+  it("Should be successfull when sending correct requestingUser", async () => {
+    const findAccountPayload = accountPayload;
+
+    delete findAccountPayload.password;
+
+    const createdAccount = await accountsService.find(
+      {
+        account: {
+          ...findAccountPayload
+        },
+        iat: 123
+      },
+      mockedAccountsRepository
+    );
+
+    expect(createdAccount).toEqual(
+      expect.objectContaining(findAccountPayload)
     );
   });
 });

@@ -38,7 +38,7 @@ const mockedAccountsRepository = {
   },
 
   async delete (id: string) {
-    return new Promise<Account>(() => accountPayload);
+    return new Promise<Account>((resolve, reject) => resolve(accountPayload));
   },
 
   async authenticate (id: string) {
@@ -152,17 +152,16 @@ describe("Find accounts service test", () => {
       const findAccountPayload = accountPayload;
       delete findAccountPayload.password;
 
-      await accountsService.update({
-        requestingUser: {
+      await accountsService.find(
+        {
           account: {
             ...findAccountPayload,
             id: ""
           },
           iat: 123
-        },
-        ...findAccountPayload
-      }, mockedAccountsRepository);
-    }).rejects.toThrow(new CustomError(400, "Você só pode alterar sua própria conta."));
+        }
+        , mockedAccountsRepository);
+    }).rejects.toThrow(new CustomError(400, "Atributo 'id' é necessário."));
   });
 
   it("Should be successfull when sending correct requestingUser", async () => {
@@ -182,6 +181,45 @@ describe("Find accounts service test", () => {
 
     expect(createdAccount).toEqual(
       expect.objectContaining(findAccountPayload)
+    );
+  });
+});
+
+describe("Delete accounts service test", () => {
+  it("Should faild when sending incorrect requestingUser (unauthenticated)", async () => {
+    expect(async () => {
+      const deleteAccountPayload = accountPayload;
+      delete deleteAccountPayload.password;
+
+      await accountsService.delete(
+        {
+          account: {
+            ...deleteAccountPayload,
+            id: ""
+          },
+          iat: 123
+        }
+        , mockedAccountsRepository);
+    }).rejects.toThrow(new CustomError(400, "Atributo 'id' é necessário."));
+  });
+
+  it("Should be successfull when sending correct requestingUser", async () => {
+    const deleteAccountPayload = accountPayload;
+
+    delete deleteAccountPayload.password;
+
+    const deletedAccount = await accountsService.delete(
+      {
+        account: {
+          ...deleteAccountPayload
+        },
+        iat: 123
+      },
+      mockedAccountsRepository
+    );
+
+    expect(deletedAccount).toEqual(
+      expect.objectContaining(deleteAccountPayload)
     );
   });
 });

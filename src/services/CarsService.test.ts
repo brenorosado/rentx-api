@@ -157,25 +157,41 @@ describe("Find accounts service test", () => {
   });
 });
 
-// describe("Delete accounts service test", () => {
-//   it("Should faild when sending incorrect requestingUser (unauthenticated)", async () => {
-//     expect(async () => {
-//       await carsService.delete(
-//         mockedRequestingUser, "mockedId", mockedCarsRepository);
-//     }).rejects.toThrow(new CustomError(400, "Atributo 'id' é necessário."));
-//   });
+describe("Delete accounts service test", () => {
+  it("Should fail when user is not a ADMIN", async () => {
+    expect(async () => {
+      await carsService.delete(
+        {
+          ...mockedRequestingUser,
+          account: {
+            ...mockedRequestingUser.account,
+            role: "USER"
+          }
+        },
+        "mockedId",
+        mockedCarsRepository
+      );
+    }).rejects.toThrow(new CustomError(401, "Apenas administradores podem deletar carros."));
+  });
 
-//   it("Should be successfull when sending correct requestingUser", async () => {
-//     const deleteAccountPayload = carPayload;
+  it("Should faild when missing id", async () => {
+    expect(async () => {
+      await carsService.delete(
+        mockedRequestingUser, "", mockedCarsRepository);
+    }).rejects.toThrow(new CustomError(400, "Atributo 'id' é necessário."));
+  });
 
-//     const deletedAccount = await carsService.delete(
-//       mockedRequestingUser,
-//       "mockedId",
-//       mockedCarsRepository
-//     );
+  it("Should be successfull when sending correct requestingUser", async () => {
+    const deleteCarPayload = carPayload;
 
-//     expect(deletedAccount).toEqual(
-//       expect.objectContaining(deleteAccountPayload)
-//     );
-//   });
-// });
+    const deletedCar = await carsService.delete(
+      mockedRequestingUser,
+      "mockedId",
+      mockedCarsRepository
+    );
+
+    expect(deletedCar).toEqual(
+      expect.objectContaining(deleteCarPayload)
+    );
+  });
+});

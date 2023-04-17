@@ -1,18 +1,14 @@
-import { Response, Router } from "express";
-import { CreateImageController } from "../modules/Image/createImage/CreateImageController";
+import { Router } from "express";
 import { routeAdapter } from "../utils/routerAdapter";
 import { auth } from "../middlewares/auth";
-import { DeleteImageController } from "../modules/Image/deleteImage/DeleteImageController";
-import { GetImageFileController } from "../modules/Image/getImageFile/GetImageFileController";
+import { ImagesController } from "@controllersTest/ImagesController";
 
 const imageRouter = Router();
 
-const createImage = new CreateImageController();
-const deleteImage = new DeleteImageController();
-const getImageFile = new GetImageFileController();
+const imageController = new ImagesController();
 
-imageRouter.post("/", auth, routeAdapter(createImage.handle));
-imageRouter.delete("/:id", auth, routeAdapter(deleteImage.handle));
-imageRouter.get("/file/:fileName", routeAdapter(getImageFile.handle));
+imageRouter.post("/", auth, routeAdapter(imageController.create));
+imageRouter.delete("/:id", auth, routeAdapter(imageController.delete));
+// imageRouter.get("/file/:fileName", routeAdapter(imageController.get));
 
 export { imageRouter };

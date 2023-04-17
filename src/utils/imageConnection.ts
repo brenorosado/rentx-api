@@ -1,9 +1,9 @@
 import fs from "fs";
 import crypto from "crypto";
 import { CustomError } from "../errors/CustomError";
-interface FileInfo {
-    fileName: String;
-    fileExtension: String;
+export interface FileInfo {
+    fileName: string;
+    fileExtension: string;
     base64: string;
 }
 
@@ -24,4 +24,12 @@ export const saveImage = async ({ fileName, fileExtension, base64 }: FileInfo) =
   });
 
   return `${imageKey}-${fileName}`;
+};
+
+export const deleteImage = (
+  { key, extension } : { key: string, extension: string }
+) => {
+  fs.unlink(`tmp/uploads/${key}.${extension}`, (err) => {
+    console.log(err);
+  });
 };

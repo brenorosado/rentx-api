@@ -2,6 +2,7 @@ import { Account } from ".prisma/client";
 import { Request, Response } from "express";
 import { AccountsService } from "@services/AccountsService";
 import { AccountsRepository } from "@repositories/AccountsRepository";
+import { encryptPassword, validatePassowrd } from "@utils/encryptData";
 
 export class AccountsController {
   async create (request: Request, response: Response) {
@@ -10,7 +11,7 @@ export class AccountsController {
     const accountRepository = new AccountsRepository();
     const accountsService = new AccountsService();
 
-    const createdAccount: Account = await accountsService.create(body, accountRepository);
+    const createdAccount: Account = await accountsService.create(body, accountRepository, encryptPassword);
 
     return response.status(201).json(createdAccount);
   };
@@ -56,7 +57,7 @@ export class AccountsController {
     const accountRepository = new AccountsRepository();
     const accountsService = new AccountsService();
 
-    const authentication = await accountsService.authenticate(body, accountRepository);
+    const authentication = await accountsService.authenticate(body, accountRepository, validatePassowrd);
 
     return response.status(200).json(authentication);
   };

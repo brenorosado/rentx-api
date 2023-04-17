@@ -1,19 +1,17 @@
 import { Image } from "@prisma/client";
 import { ImagesRepository } from "@repositories/ImagesRepository";
 import { requiredFields } from "@utils/requiredFields";
-import { saveImage } from "@utils/saveImage";
-import { unlink } from "fs";
+import { FileInfo } from "@utils/imageConnection";
 
 export class ImagesService {
   async create ({
     fileName,
     fileExtension,
     base64
-  }: {
-    fileName: string,
-    fileExtension: string;
-    base64: string;
-  }, imagesRepository: ImagesRepository) {
+  }: FileInfo,
+  imagesRepository: ImagesRepository,
+  saveImage: (s: FileInfo) => Promise<string>
+  ) {
     requiredFields({
       fileName,
       fileExtension,
@@ -35,16 +33,18 @@ export class ImagesService {
     return createdImage;
   };
 
-  async delete (id: string, imagesRepository: ImagesRepository) {
+  async delete (
+    id: string,
+    imagesRepository:
+    ImagesRepository,
+    deleteImage: ({ key, extension }: { key: string, extension: string}) => void) {
     requiredFields({ id });
 
     const deletedImage: Image = await imagesRepository.delete(id);
 
     const { fileKey, fileExtension } = deletedImage;
 
-    unlink(`tmp/uploads/${fileKey}.${fileExtension}`, (err) => {
-      console.log(err);
-    });
+    deleteImage({ key: fileKey, extension: fileExtension });
 
     return deletedImage;
   };

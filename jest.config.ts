@@ -8,7 +8,8 @@ const config: Config = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
   modulePaths: [
     "<rootDir>"
-  ]
+  ],
+  setupFiles: ["<rootDir>/src/test/setEnvVars.ts"]
 };
 
 export default config;

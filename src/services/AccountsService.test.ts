@@ -42,9 +42,13 @@ const mockedAccountsRepository = {
   },
 
   async authenticate (id: string) {
-    return new Promise<Account>(() => accountPayload);
+    return new Promise<Account>((resolve, reject) => resolve(accountPayload));
   }
 };
+
+const mockedEncryptPassword = (password: string) => new Promise<string>((resolve, reject) => resolve(password));
+const mockedValidatePassoword = (password: string, encryptedPassword: string) =>
+  new Promise<boolean>((resolve, reject) => resolve(password === encryptedPassword));
 
 describe("Create accounts service tests", () => {
   it.each([
@@ -60,16 +64,19 @@ describe("Create accounts service tests", () => {
       await accountsService.create({
         ...createAccountPayload,
         ...payload
-      }, mockedAccountsRepository);
+      },
+      mockedAccountsRepository,
+      mockedEncryptPassword);
     }).rejects.toThrow(new CustomError(400, `Atributo '${key}' é necessário.`));
   });
 
   it("Should be successfull when sending correct payload", async () => {
-    const createAccountPayload = accountPayload;
+    const createAccountPayload = { ...accountPayload };
 
     const createdAccount = await accountsService.create(
       createAccountPayload,
-      mockedAccountsRepository
+      mockedAccountsRepository,
+      mockedEncryptPassword
     );
 
     delete createAccountPayload.password;
@@ -88,7 +95,7 @@ describe("Update accounts service tests", () => {
     ["role", { role: "" }]
   ])("Should fail when missing %s", async (key, payload) => {
     expect(async () => {
-      const updateAccountPayload = accountPayload;
+      const updateAccountPayload = { ...accountPayload };
       delete updateAccountPayload.password;
 
       await accountsService.update({
@@ -106,7 +113,7 @@ describe("Update accounts service tests", () => {
 
   it("Should fail when trying to update account of another user", () => {
     expect(async () => {
-      const updateAccountPayload = accountPayload;
+      const updateAccountPayload = { ...accountPayload };
       delete updateAccountPayload.password;
 
       await accountsService.update({
@@ -123,7 +130,7 @@ describe("Update accounts service tests", () => {
   });
 
   it("Should be successfull when sending correct payload", async () => {
-    const updateAccountPayload = accountPayload;
+    const updateAccountPayload = { ...accountPayload };
 
     delete updateAccountPayload.password;
 
@@ -149,7 +156,7 @@ describe("Update accounts service tests", () => {
 describe("Find accounts service test", () => {
   it("Should faild when sending incorrect requestingUser (unauthenticated)", async () => {
     expect(async () => {
-      const findAccountPayload = accountPayload;
+      const findAccountPayload = { ...accountPayload };
       delete findAccountPayload.password;
 
       await accountsService.find(
@@ -165,7 +172,7 @@ describe("Find accounts service test", () => {
   });
 
   it("Should be successfull when sending correct requestingUser", async () => {
-    const findAccountPayload = accountPayload;
+    const findAccountPayload = { ...accountPayload };
 
     delete findAccountPayload.password;
 
@@ -188,7 +195,7 @@ describe("Find accounts service test", () => {
 describe("Delete accounts service test", () => {
   it("Should faild when sending incorrect requestingUser (unauthenticated)", async () => {
     expect(async () => {
-      const deleteAccountPayload = accountPayload;
+      const deleteAccountPayload = { ...accountPayload };
       delete deleteAccountPayload.password;
 
       await accountsService.delete(
@@ -204,7 +211,7 @@ describe("Delete accounts service test", () => {
   });
 
   it("Should be successfull when sending correct requestingUser", async () => {
-    const deleteAccountPayload = accountPayload;
+    const deleteAccountPayload = { ...accountPayload };
 
     delete deleteAccountPayload.password;
 
@@ -220,6 +227,58 @@ describe("Delete accounts service test", () => {
 
     expect(deletedAccount).toEqual(
       expect.objectContaining(deleteAccountPayload)
+    );
+  });
+});
+
+describe("Authenticate service test", () => {
+  it.each([
+    ["email", { email: "" }],
+    ["password", { password: "" }]
+  ])("Should fail when missing %s", async (key, payload) => {
+    expect(async () => {
+      const authenticatePayload = { ...accountPayload };
+
+      await accountsService.authenticate(
+        {
+          ...authenticatePayload,
+          ...payload
+        },
+        mockedAccountsRepository,
+        mockedValidatePassoword
+      );
+    }).rejects.toThrow(new CustomError(400, `Atributo '${key}' é necessário.`));
+  });
+
+  it("Should fail when sending incorrect password", async () => {
+    expect(async () => {
+      const authenticatePayload = { ...accountPayload };
+
+      await accountsService.authenticate(
+        {
+          ...authenticatePayload,
+          password: "123"
+        },
+        mockedAccountsRepository,
+        mockedValidatePassoword
+      );
+    }).rejects.toThrow(new CustomError(401, "Senha incorreta."));
+  });
+
+  it("Should be successfull when sending correct payload", async () => {
+    const authenticatePayload = { ...accountPayload };
+
+    const authenticateRes = await accountsService.authenticate(
+      authenticatePayload,
+      mockedAccountsRepository,
+      mockedValidatePassoword
+    );
+
+    const expectedAccount = { ...authenticatePayload };
+    delete expectedAccount.password;
+
+    expect(authenticateRes.account).toEqual(
+      expect.objectContaining(expectedAccount)
     );
   });
 });

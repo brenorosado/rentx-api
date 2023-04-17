@@ -1,6 +1,5 @@
 import { Account } from ".prisma/client";
 import { requiredFields } from "@utils/requiredFields";
-import bcrypt from "bcryptjs";
 import { cnhRegex } from "@utils/validations";
 import { CustomError } from "@errors/CustomError";
 import { AccountsRepository } from "@repositories/AccountsRepository";
@@ -13,13 +12,17 @@ interface UpdateAccount extends Account {
 }
 
 export class AccountsService {
-  async create (account: Account, accountRepository: AccountsRepository) {
+  async create (
+    account: Account,
+    accountRepository: AccountsRepository,
+    encryptPassword: (p: string) => Promise<string>
+  ) {
     const { name, email, password, cnh, role } = account;
 
     requiredFields({ name, email, password, cnh, role });
 
     if (!cnhRegex.test(cnh)) throw new CustomError(400, "Nº de CNH inválido.");
-    const encryptedPassword = await bcrypt.hash(password, 10);
+    const encryptedPassword = await encryptPassword(password);
 
     const createdAccount: Account = await accountRepository.create({
       ...account,
@@ -77,20 +80,22 @@ export class AccountsService {
 
   async authenticate (
     { email, password }: { email: string, password: string },
-    accountRepository: AccountsRepository
+    accountRepository: AccountsRepository,
+    validatePassowrd: (p: string, ep: string) => Promise<boolean>
   ) {
     requiredFields({ email, password });
 
+    console.log({ email, password });
+
     const account: Account = await accountRepository.authenticate(email);
 
-    if (!account) throw new CustomError(401, "E-mail incorreto.");
+    console.log("account", account);
 
-    let validatePassword = false;
-
-    validatePassword = await bcrypt.compare(password, account.password);
-    if (!validatePassword) throw new CustomError(401, "Senha incorreta.");
+    if (!await validatePassowrd(password, account.password)) throw new CustomError(401, "Senha incorreta.");
+    console.log("PASSWORD VALID!");
 
     const token = generateToken(account);
+    console.log("TOKEN", token);
     delete account.password;
 
     return {

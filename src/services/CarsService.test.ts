@@ -145,26 +145,17 @@ describe("Create accounts service tests", () => {
   });
 });
 
-// describe("Find accounts service test", () => {
-//   it("Should faild when sending incorrect requestingUser (unauthenticated)", async () => {
-//     expect(async () => {
-//       await carsService.find({}, mockedCarsRepository);
-//     }).rejects.toThrow(new CustomError(400, "Atributo 'id' é necessário."));
-//   });
+describe("Find accounts service test", () => {
+  it("Should be successfull when sending correct requestingUser", async () => {
+    const findCarsPayload = carPayload;
 
-//   it("Should be successfull when sending correct requestingUser", async () => {
-//     const findCarsPayload = carPayload;
+    const carsFound = await carsService.find({}, mockedCarsRepository);
 
-//     const createdCar = await carsService.find(
-//       {},
-//       mockedCarsRepository
-//     );
-
-//     expect(createdCar).toEqual(
-//       expect.objectContaining(findCarsPayload)
-//     );
-//   });
-// });
+    expect(carsFound[0]).toEqual(
+      expect.objectContaining(findCarsPayload)
+    );
+  });
+});
 
 // describe("Delete accounts service test", () => {
 //   it("Should faild when sending incorrect requestingUser (unauthenticated)", async () => {

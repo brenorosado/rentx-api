@@ -9,7 +9,7 @@
     "dev": "nodemon",
     "start": "ts-node --transpile-only src/server.ts",
     "test-coverage": "jest --coverage",
-    "little-test": "jest --coverage ./src/services/AccountsService.test.ts"
+    "test": "jest --coverage ./src/services/CarsService.test.ts"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",

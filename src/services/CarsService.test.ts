@@ -145,7 +145,7 @@ describe("Create accounts service tests", () => {
   });
 });
 
-describe("Find accounts service test", () => {
+describe("Find cars service test", () => {
   it("Should be successfull when sending correct requestingUser", async () => {
     const findCarsPayload = carPayload;
 
@@ -157,7 +157,7 @@ describe("Find accounts service test", () => {
   });
 });
 
-describe("Delete accounts service test", () => {
+describe("Delete cars service test", () => {
   it("Should fail when user is not a ADMIN", async () => {
     expect(async () => {
       await carsService.delete(

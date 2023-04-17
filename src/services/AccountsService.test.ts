@@ -70,6 +70,19 @@ describe("Create accounts service tests", () => {
     }).rejects.toThrow(new CustomError(400, `Atributo '${key}' é necessário.`));
   });
 
+  it("Should fail when sending invalid cnh", async () => {
+    expect(async () => {
+      const createAccountPayload = accountPayload;
+
+      await accountsService.create({
+        ...createAccountPayload,
+        cnh: "123761"
+      },
+      mockedAccountsRepository,
+      mockedEncryptPassword);
+    }).rejects.toThrow(new CustomError(400, "Nº de CNH inválido."));
+  });
+
   it("Should be successfull when sending correct payload", async () => {
     const createAccountPayload = { ...accountPayload };
 
@@ -109,6 +122,25 @@ describe("Update accounts service tests", () => {
         ...payload
       }, mockedAccountsRepository);
     }).rejects.toThrow(new CustomError(400, `Atributo '${key}' é necessário.`));
+  });
+
+  it("Should fail when sending invalid cnh", async () => {
+    expect(async () => {
+      const updateAccountPayload = accountPayload;
+
+      await accountsService.update({
+        requestingUser: {
+          account: {
+            ...updateAccountPayload,
+            id: "mockedId"
+          },
+          iat: 123
+        },
+        ...updateAccountPayload,
+        cnh: "123761",
+        image: { id: "imageId" }
+      }, mockedAccountsRepository);
+    }).rejects.toThrow(new CustomError(400, "Nº de CNH inválido."));
   });
 
   it("Should fail when trying to update account of another user", () => {

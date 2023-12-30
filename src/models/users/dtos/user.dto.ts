@@ -14,6 +14,9 @@ export class UserDto {
   cnh: string;
 
   @Expose()
+  role: string;
+
+  @Expose()
   createdAt: string;
 
   @Expose()

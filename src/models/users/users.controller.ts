@@ -11,11 +11,12 @@ import {
   UseGuards,
   Delete,
   Put,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { SignUpDto } from './dtos/sign-up.dto';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dtos/sign-in.dto';
@@ -26,10 +27,11 @@ import { RequestingUser } from './decorators/requesting-user.decorator';
 import { User } from '@prisma/client';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { PaginatedUsersDto } from './dtos/paginate-users.dto';
 
 @Controller('/user')
 @ApiTags('User')
-@Serialize(UserDto)
+@UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
@@ -37,16 +39,20 @@ export class UsersController {
   ) {}
 
   @Post('/sign-up')
-  signUp(@Body() body: SignUpDto) {
-    return this.authService.signUp(body);
+  async signUp(@Body() body: SignUpDto): Promise<UserDto> {
+    const user = await this.authService.signUp(body);
+    return new UserDto(user);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('/sign-in')
-  async signIn(@Body() body: SignInDto, @Session() session: any) {
+  async signIn(
+    @Body() body: SignInDto,
+    @Session() session: any,
+  ): Promise<UserDto> {
     const user = await this.authService.signIn(body);
     session.userId = user.id;
-    return user;
+    return new UserDto(user);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -57,31 +63,45 @@ export class UsersController {
 
   @UseGuards(AdminGuard)
   @Post('/')
-  create(@Body() body: CreateUserDto) {
-    return this.usersService.create(body);
+  async create(
+    @Body() body: CreateUserDto,
+    @RequestingUser() requestingUser: User,
+  ): Promise<UserDto> {
+    const user = await this.usersService.create(body, requestingUser);
+    return new UserDto(user);
   }
 
   @UseGuards(AuthGuard)
   @Get('/:id')
-  findById(@Param('id') id: string) {
-    return this.usersService.findById(id);
+  async findById(@Param('id') id: string): Promise<UserDto> {
+    const user = await this.usersService.findById(id);
+    return new UserDto(user);
   }
 
-  @UseGuards(AdminGuard)
+  @UseGuards(AuthGuard)
   @Get('/')
-  find(@Query() query: GetUsersDto) {
-    return this.usersService.find(query);
+  async find(@Query() query: GetUsersDto): Promise<PaginatedUsersDto> {
+    const paginatedUsers = await this.usersService.find(query);
+    return new PaginatedUsersDto(paginatedUsers);
   }
 
   @UseGuards(AuthGuard)
   @Delete('/:id')
-  delete(@Param('id') id: string, @RequestingUser() requestingUser: User) {
-    return this.usersService.deleteById(id, requestingUser);
+  async delete(
+    @Param('id') id: string,
+    @RequestingUser() requestingUser: User,
+  ): Promise<UserDto> {
+    const user = await this.usersService.deleteById(id, requestingUser);
+    return new UserDto(user);
   }
 
   @UseGuards(AuthGuard)
   @Put()
-  update(@Body() body: UpdateUserDto, @RequestingUser() requestingUser: User) {
-    return this.usersService.update(body, requestingUser);
+  async update(
+    @Body() body: UpdateUserDto,
+    @RequestingUser() requestingUser: User,
+  ): Promise<UserDto> {
+    const user = await this.usersService.update(body, requestingUser);
+    return new UserDto(user);
   }
 }

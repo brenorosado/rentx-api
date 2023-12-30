@@ -1,4 +1,8 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { UsersService } from '../users.service';
 import { User } from '@prisma/client';
@@ -20,6 +24,12 @@ export class RequestingUserMiddleware implements NestMiddleware {
     const { userId } = req.session || {};
     if (userId) {
       const user = await this.usersService.findById(userId);
+
+      if (!user) {
+        req.session.userId = null;
+        throw new UnauthorizedException();
+      }
+
       req.requestingUser = user;
     }
 

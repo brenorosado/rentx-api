@@ -1,6 +1,10 @@
-import { Expose } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 
 export class UserDto {
+  constructor(partial: Partial<UserDto>) {
+    Object.assign(this, partial);
+  }
+
   @Expose()
   id: string;
 
@@ -16,14 +20,17 @@ export class UserDto {
   @Expose()
   role: string;
 
+  @Exclude()
+  password: string;
+
   @Expose()
-  createdAt: string;
+  createdAt: Date;
 
   @Expose()
   createdBy: string;
 
   @Expose()
-  updatedAt: string;
+  updatedAt: Date;
 
   @Expose()
   updatedBy: string;

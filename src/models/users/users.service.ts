@@ -5,16 +5,21 @@ import { Prisma, User } from '@prisma/client';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { encryptPassword } from 'src/utils/encrypt-password';
 import { CreateUserDto } from './dtos/create-user.dto';
-
+import { getPagination, paginatedParser } from 'src/utils/pagination';
 @Injectable()
 export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto, requestingUser: User) {
     const encryptedPassword = await encryptPassword(createUserDto.password);
 
     return this.prismaService.user.create({
-      data: { ...createUserDto, role: 'ADMIN', password: encryptedPassword },
+      data: {
+        ...createUserDto,
+        role: 'ADMIN',
+        password: encryptedPassword,
+        createdBy: requestingUser.id,
+      },
     });
   }
 
@@ -22,7 +27,16 @@ export class UsersService {
     return this.prismaService.user.findUnique({ where: { id } });
   }
 
-  find({ name, email, cnh, role }: GetUsersDto) {
+  async find({
+    name,
+    email,
+    cnh,
+    role,
+    size,
+    page,
+    direction = 'desc',
+    orderBy = 'createdAt',
+  }: GetUsersDto) {
     const filters = {
       ...(name && {
         name: { contains: name, mode: Prisma.QueryMode.insensitive },
@@ -36,7 +50,22 @@ export class UsersService {
       ...(role && { role: { equals: role } }),
     };
 
-    return this.prismaService.user.findMany({ where: filters });
+    const pagination = getPagination(size, page);
+    const ordenation = {
+      [orderBy]: direction,
+    };
+
+    return paginatedParser(
+      this.prismaService.$transaction([
+        this.prismaService.user.count({ where: filters }),
+        this.prismaService.user.findMany({
+          ...pagination,
+          orderBy: ordenation,
+          where: filters,
+        }),
+      ]),
+      page,
+    );
   }
 
   async update(updateUserDto: UpdateUserDto, requestingUser: User) {
@@ -49,7 +78,7 @@ export class UsersService {
 
     return this.prismaService.user.update({
       where: { id: updateUserDto.id },
-      data: updateUserDto,
+      data: { ...updateUserDto, updatedBy: requestingUser.id },
     });
   }
 

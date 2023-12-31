@@ -1,8 +1,9 @@
 import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
-import { UsersModule } from './models/users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as cookieSession from 'cookie-session';
+import { UsersModule } from './models/users/users.module';
+import { CarsModule } from './models/cars/cars.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import * as cookieSession from 'cookie-session';
       envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
     }),
     UsersModule,
+    CarsModule,
   ],
   controllers: [],
   providers: [

@@ -12,18 +12,50 @@ enum UserRoles {
   ADMIN
 }
 
-model User {
-  id            String @id @default(uuid())
-  name          String
-  email         String @unique
-  cnh           String? @unique
-  password      String
-  role          UserRoles @default(USER)
+enum FuelType {
+  GAS
+  ELECTRIC
+  HYBRID
+}
 
-  createdAt     DateTime @default(now())
-  createdBy     String?
-  updatedAt     DateTime? @updatedAt()
-  updatedBy     String?
+enum GearType {
+  MANUAL
+  AUTOMATIC
+}
+
+model User {
+  id                      String @id @default(uuid())
+  name                    String
+  email                   String @unique
+  cnh                     String? @unique
+  password                String
+  role                    UserRoles @default(USER)
+
+  createdAt               DateTime @default(now())
+  createdBy               String?
+  updatedAt               DateTime? @updatedAt()
+  updatedBy               String?
 
   @@map("users")
+}
+
+model Car {
+  id                      String @id @default(uuid())
+  make                    String
+  model                   String
+  pricePerDay             Int
+  maxKmPerHour            Int
+  timeToAHundredKmPerHour Float
+  fuelType                FuelType
+  gearType                GearType
+  maxPeopleCapacity       Int
+  horsepower              Int
+  description             String
+
+  createdAt               DateTime @default(now())
+  createdBy               String?
+  updatedAt               DateTime? @updatedAt()
+  updatedBy               String?
+
+  @@map("cars")
 }

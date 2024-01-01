@@ -1,71 +1,57 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsInt, IsNumber, IsString, IsOptional } from 'class-validator';
-import { FuelType } from '../enums/fuel-type.enum';
-import { GearType } from '../enums/gear-type.enum';
 import { Transform } from 'class-transformer';
+import {
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Direction } from 'src/utils/pagination';
 
-export class GetCarsDto {
+export class GetBookingsDto {
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsString()
-  make: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  model: string;
+  @IsDateString()
+  minStartAt: Date;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsInt()
-  @Transform(({ value }) => parseInt(value))
-  minPricePerDay: number;
+  @IsDateString()
+  maxStartAt: Date;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsInt()
-  @Transform(({ value }) => parseInt(value))
-  maxPricePerDay: number;
+  @IsDateString()
+  minEndAt: Date;
 
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsInt()
-  @Transform(({ value }) => parseInt(value))
-  maxKmPerHour: number;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value))
-  timeToAHundredKmPerHour: number;
-
-  @ApiProperty({ required: false, enum: FuelType })
-  @IsOptional()
-  @IsEnum(FuelType)
-  fuelType: keyof typeof FuelType;
-
-  @ApiProperty({ required: false, enum: GearType })
-  @IsOptional()
-  @IsEnum(GearType)
-  gearType: keyof typeof GearType;
+  @IsDateString()
+  maxEndAt: Date;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  maxPeopleCapacity: number;
+  minTotalPrice: number;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsInt()
   @Transform(({ value }) => parseInt(value))
-  horsepower: number;
+  maxTotalPrice: number;
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  description: string;
+  carId: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  userId: string;
 
   @ApiProperty({ required: false, default: 'createdAt' })
   @IsOptional()

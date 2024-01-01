@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as cookieSession from 'cookie-session';
 import { UsersModule } from './models/users/users.module';
 import { CarsModule } from './models/cars/cars.module';
+import { BookingsModule } from './models/bookings/bookings.module';
 
 @Module({
   imports: [
@@ -13,10 +14,14 @@ import { CarsModule } from './models/cars/cars.module';
     }),
     UsersModule,
     CarsModule,
+    BookingsModule,
   ],
   controllers: [],
   providers: [
-    { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true }) },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({ whitelist: true, transform: true }),
+    },
   ],
 })
 export class AppModule {

@@ -24,11 +24,11 @@ export class CreateCarDto {
   @IsNumber()
   timeToAHundredKmPerHour: number;
 
-  @ApiProperty()
+  @ApiProperty({ enum: FuelType })
   @IsEnum(FuelType)
   fuelType: keyof typeof FuelType;
 
-  @ApiProperty()
+  @ApiProperty({ enum: GearType })
   @IsEnum(GearType)
   gearType: keyof typeof GearType;
 

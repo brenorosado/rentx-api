@@ -36,6 +36,8 @@ model User {
   updatedAt               DateTime? @updatedAt()
   updatedBy               String?
 
+  bookings                Booking[] @relation("booking_user")
+
   @@map("users")
 }
 
@@ -57,5 +59,26 @@ model Car {
   updatedAt               DateTime? @updatedAt()
   updatedBy               String?
 
+  bookings                Booking[] @relation("booking_car")
+
   @@map("cars")
+}
+
+model Booking {
+  id                      String @id @default(uuid())
+  startAt                 DateTime
+  endAt                   DateTime
+  totalPrice              Int
+
+  createdAt               DateTime @default(now())
+  createdBy               String?
+  updatedAt               DateTime? @updatedAt()
+  updatedBy               String?
+
+  userId                  String
+  user                    User @relation("booking_user", fields: [userId], references: [id])
+  carId                   String
+  car                     Car @relation("booking_car", fields: [carId], references: [id])
+
+  @@map("bookings")
 }

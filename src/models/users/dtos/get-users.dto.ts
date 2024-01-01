@@ -28,7 +28,7 @@ export class GetUsersDto {
   @IsString()
   orderBy: string;
 
-  @ApiProperty({ required: false, default: 'desc' })
+  @ApiProperty({ required: false, default: 'desc', enum: Direction })
   @IsOptional()
   @IsEnum(Direction)
   direction: keyof typeof Direction;

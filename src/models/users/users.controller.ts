@@ -28,6 +28,7 @@ import { User } from '@prisma/client';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { PaginatedUsersDto } from './dtos/paginate-users.dto';
+import { SendForgottenPasswordEmailDto } from './dtos/send-reset-password-email.dto';
 
 @Controller('/user')
 @ApiTags('User')
@@ -103,5 +104,10 @@ export class UsersController {
   ): Promise<UserDto> {
     const user = await this.usersService.update(body, requestingUser);
     return new UserDto(user);
+  }
+
+  @Post('/send-reset-password-email')
+  async sendResetPasswordEmail(@Body() body: SendForgottenPasswordEmailDto) {
+    await this.authService.sendResetPasswordEmail(body.email);
   }
 }

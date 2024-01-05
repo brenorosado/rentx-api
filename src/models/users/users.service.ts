@@ -3,7 +3,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { GetUsersDto } from './dtos/get-users.dto';
 import { Prisma, User } from '@prisma/client';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { encryptPassword } from 'src/utils/encrypt-password';
+import { encryptKey } from 'src/utils/auth-encrypt';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { getPagination, paginatedParser } from 'src/utils/pagination';
 @Injectable()
@@ -11,7 +11,7 @@ export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto, requestingUser: User) {
-    const encryptedPassword = await encryptPassword(createUserDto.password);
+    const encryptedPassword = await encryptKey(createUserDto.password);
 
     return this.prismaService.user.create({
       data: {

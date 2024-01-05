@@ -36,6 +36,7 @@ model User {
   updatedAt               DateTime? @updatedAt()
   updatedBy               String?
 
+  code                    Code? @relation("forgotten_password_code")
   bookings                Booking[] @relation("booking_user")
 
   @@map("users")
@@ -81,4 +82,17 @@ model Booking {
   car                     Car @relation("booking_car", fields: [carId], references: [id])
 
   @@map("bookings")
+}
+
+model Code {
+  id                      String   @id @default(uuid())
+  value                   String
+  expires                 Int      @default(900000)
+  
+  createdAt               DateTime @default(now())
+
+  userId                  String   @unique
+  user                    User  @relation("forgotten_password_code",fields: [userId], references: [id])
+  
+  @@map("codes")
 }

@@ -1,5 +1,9 @@
 import { PrismaService } from 'src/prisma.service';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { GetUsersDto } from './dtos/get-users.dto';
 import { Prisma, User } from '@prisma/client';
 import { UpdateUserDto } from './dtos/update-user.dto';
@@ -11,6 +15,15 @@ export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto, requestingUser: User) {
+    const userWithSameEmail = await this.prismaService.user.findFirst({
+      where: {
+        email: { equals: createUserDto.email },
+      },
+    });
+
+    if (userWithSameEmail)
+      throw new BadRequestException('E-mail already registered.');
+
     const encryptedPassword = await encryptKey(createUserDto.password);
 
     return this.prismaService.user.create({

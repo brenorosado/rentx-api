@@ -22,6 +22,18 @@ export class AuthService {
   async signUp(createUserDto: SignUpDto) {
     const encryptedPassword = await encryptKey(createUserDto.password);
 
+    const userWithSameEmailOrCnh = await this.prismaService.user.findFirst({
+      where: {
+        OR: [
+          { email: { equals: createUserDto.email } },
+          { cnh: { equals: createUserDto.cnh } },
+        ],
+      },
+    });
+
+    if (userWithSameEmailOrCnh)
+      throw new BadRequestException('E-mail or CNH already registered.');
+
     return this.prismaService.user.create({
       data: { ...createUserDto, role: 'USER', password: encryptedPassword },
     });

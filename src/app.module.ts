@@ -1,10 +1,10 @@
-import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import * as cookieSession from 'cookie-session';
+import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './models/users/users.module';
 import { CarsModule } from './models/cars/cars.module';
 import { BookingsModule } from './models/bookings/bookings.module';
+import { AuthModule } from './models/users/auth/auth.module';
 
 @Module({
   imports: [
@@ -12,9 +12,10 @@ import { BookingsModule } from './models/bookings/bookings.module';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
     }),
-    UsersModule,
-    CarsModule,
+    AuthModule,
     BookingsModule,
+    CarsModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [
@@ -24,11 +25,4 @@ import { BookingsModule } from './models/bookings/bookings.module';
     },
   ],
 })
-export class AppModule {
-  constructor(private configService: ConfigService) {}
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(cookieSession({ keys: [this.configService.get('COOKIE_KEY')] }))
-      .forRoutes('*');
-  }
-}
+export class AppModule {}

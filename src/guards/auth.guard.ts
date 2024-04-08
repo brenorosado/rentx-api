@@ -7,9 +7,11 @@ import {
 export class AuthGuard implements CanActivate {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    if (!request.session.userId) {
+
+    if (!request.requestingUser || request?.requestingUser?.deleted) {
       throw new UnauthorizedException();
     }
-    return request.session.userId;
+
+    return request.requestingUser;
   }
 }

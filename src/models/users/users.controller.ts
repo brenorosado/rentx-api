@@ -5,21 +5,16 @@ import {
   Post,
   Get,
   Query,
-  Session,
-  HttpCode,
-  HttpStatus,
   UseGuards,
   Delete,
   Put,
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { SignUpDto } from './dtos/sign-up.dto';
 import { UserDto } from './dtos/user.dto';
-import { AuthService } from './auth.service';
-import { SignInDto } from './dtos/sign-in.dto';
+import { AuthService } from './auth/auth.service';
 import { GetUsersDto } from './dtos/get-users.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AdminGuard } from 'src/guards/admin.guard';
@@ -33,35 +28,12 @@ import { SendForgottenPasswordEmailDto } from './dtos/send-reset-password-email.
 @Controller('/user')
 @ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiBearerAuth()
 export class UsersController {
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
   ) {}
-
-  @Post('/sign-up')
-  async signUp(@Body() body: SignUpDto): Promise<UserDto> {
-    const user = await this.authService.signUp(body);
-    return new UserDto(user);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('/sign-in')
-  async signIn(
-    @Body() body: SignInDto,
-    @Session() session: any,
-  ): Promise<UserDto> {
-    const user = await this.authService.signIn(body);
-    session.userId = user.id;
-    return new UserDto(user);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('/sign-out')
-  signOut(@Session() session: any) {
-    session.userId = null;
-  }
-
   @UseGuards(AdminGuard)
   @Post('/')
   async create(
@@ -70,6 +42,12 @@ export class UsersController {
   ): Promise<UserDto> {
     const user = await this.usersService.create(body, requestingUser);
     return new UserDto(user);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/authenticated-user')
+  getAuthenticatedUser(@RequestingUser() requestingUser: User): UserDto {
+    return new UserDto(requestingUser);
   }
 
   @UseGuards(AuthGuard)

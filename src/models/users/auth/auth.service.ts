@@ -13,7 +13,8 @@ import {
 } from '@nestjs/common';
 import { SignInDto } from './dtos/sign-in.dto';
 import { sendForgottenPasswordEmail } from 'src/utils/send-email';
-import { ResetPasswordDto } from './dtos/reset-password.dto';
+import { ResetPasswordDto } from '../dtos/reset-password.dto';
+import { generateToken } from 'src/utils/token';
 
 @Injectable()
 export class AuthService {
@@ -54,7 +55,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    return user;
+    const token = await generateToken(user);
+
+    console.log({ user, token });
+
+    return { user, token };
   }
 
   async sendResetPasswordEmail(email: string) {
